@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+:root {
+  --bg-primary: #0a0e17;
+  --bg-secondary: #111827;
+  --bg-card: #1a2235;
+  --border: #2a3548;
+  --text-primary: #e2e8f0;
+  --text-muted: #94a3b8;
+  --accent: #3b82f6;
+  --safe: #22c55e;
+  --watch: #eab308;
+  --defensive: #f97316;
+  --critical: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out forwards;
+}
+
+@keyframes pulse-critical {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+  }
+}
+
+.animate-pulse-critical {
+  animation: pulse-critical 2s ease-in-out infinite;
+}
+
+.terminal-grid {
+  background-image:
+    linear-gradient(rgba(42, 53, 72, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(42, 53, 72, 0.3) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+}
+
+.risk-safe {
+  color: var(--safe);
+}
+.risk-watch {
+  color: var(--watch);
+}
+.risk-defensive {
+  color: var(--defensive);
+}
+.risk-critical {
+  color: var(--critical);
+}
+
+.badge-safe {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--safe);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+.badge-watch {
+  background: rgba(234, 179, 8, 0.15);
+  color: var(--watch);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+}
+.badge-defensive {
+  background: rgba(249, 115, 22, 0.15);
+  color: var(--defensive);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+}
+.badge-critical {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--critical);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.badge-live {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--safe);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+.badge-demo {
+  background: rgba(234, 179, 8, 0.15);
+  color: var(--watch);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+}
+.badge-mixed {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
