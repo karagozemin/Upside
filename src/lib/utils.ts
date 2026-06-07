@@ -7,45 +7,23 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatUsd(value: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(value);
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
 }
 
 export function formatPercent(value: number, decimals = 1): string {
-  const sign = value >= 0 ? "+" : "";
-  return `${sign}${value.toFixed(decimals)}%`;
+  return `${value >= 0 ? "+" : ""}${value.toFixed(decimals)}%`;
 }
 
 export function formatPrice(value: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
 }
 
 export function verdictLabel(verdict: RiskVerdict): string {
-  const labels: Record<RiskVerdict, string> = {
-    safe: "Safe",
-    watch: "Watch",
-    defensive: "Defensive",
-    critical: "Critical",
-  };
-  return labels[verdict];
+  return { safe: "Safe", watch: "Watch", defensive: "Defensive", critical: "Critical" }[verdict];
 }
 
 export function verdictBadgeClass(verdict: RiskVerdict): string {
-  const classes: Record<RiskVerdict, string> = {
-    safe: "badge-safe",
-    watch: "badge-watch",
-    defensive: "badge-defensive",
-    critical: "badge-critical",
-  };
-  return classes[verdict];
+  return { safe: "badge-safe", watch: "badge-watch", defensive: "badge-defensive", critical: "badge-critical" }[verdict];
 }
 
 export function getVerdictFromScore(score: number): RiskVerdict {

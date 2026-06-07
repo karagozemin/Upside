@@ -1,71 +1,76 @@
-import Link from "next/link";
+"use client";
 
-const nav = [
-  { href: "/desk", label: "Command Center" },
-  { href: "/desk/narrative", label: "Narrative Radar" },
-  { href: "/desk/replay", label: "Risk Replay" },
-  { href: "/desk/audit", label: "Audit Log" },
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+
+const NAV = [
+  { href: "/desk", icon: "◉", label: "Overview", sub: "Command center" },
+  { href: "/desk/positions/btc-perp", icon: "⚡", label: "BTC Demo", sub: "Main flow", primary: true },
+  { href: "/desk/replay", icon: "↻", label: "Replay", sub: "Timeline" },
+  { href: "/desk/audit", icon: "☰", label: "Audit", sub: "Decision log" },
 ];
 
 export default function DeskLayout({ children }: { children: React.ReactNode }) {
+  const path = usePathname();
+
   return (
     <div className="flex min-h-screen">
-      <aside className="relative hidden w-56 shrink-0 border-r border-[#2a3548] bg-[#111827] lg:block">
-        <div className="border-b border-[#2a3548] px-4 py-5">
-          <Link href="/" className="font-mono text-lg font-semibold">
-            Upside
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[220px] flex-col border-r border-white/5 bg-[#030508]/90 backdrop-blur-xl lg:flex">
+        <div className="border-b border-white/5 p-5">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#22d3ee]/15 text-[#22d3ee]">↑</div>
+            <div>
+              <p className="display text-base font-bold">Upside</p>
+              <p className="text-[10px] text-[#64748b]">Risk Desk</p>
+            </div>
           </Link>
-          <p className="mt-1 text-xs text-[#94a3b8]">Risk Desk</p>
         </div>
-        <nav className="p-3">
-          {nav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="mb-1 block rounded px-3 py-2 text-sm text-[#94a3b8] hover:bg-[#1a2235] hover:text-[#e2e8f0]"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="absolute bottom-0 w-56 border-t border-[#2a3548] p-4">
-          <p className="text-xs text-[#94a3b8]">
-            Most agents chase alpha.
-            <br />
-            Upside protects the downside.
-          </p>
-        </div>
-      </aside>
 
-      <div className="flex flex-1 flex-col">
-        <header className="flex items-center justify-between border-b border-[#2a3548] bg-[#0a0e17] px-6 py-4">
-          <div className="flex items-center gap-4 lg:hidden">
-            <Link href="/" className="font-mono font-semibold">
-              Upside
-            </Link>
-          </div>
-          <div className="flex flex-wrap gap-2 lg:hidden">
-            {nav.map((item) => (
+        <nav className="flex-1 space-y-1 p-3">
+          {NAV.map((item) => {
+            const active = path === item.href || (item.href !== "/desk" && path.startsWith(item.href));
+            return (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-xs text-[#94a3b8] hover:text-[#e2e8f0]"
+                className={cn(
+                  "flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 transition-all",
+                  active ? "bg-[#22d3ee]/10 text-[#22d3ee]" : "text-[#64748b] hover:bg-white/5 hover:text-[#f1f5f9]",
+                  item.primary && !active && "ring-1 ring-[#fb7185]/20"
+                )}
               >
-                {item.label}
+                <span className="text-base">{item.icon}</span>
+                <div>
+                  <p className="text-sm font-medium">{item.label}</p>
+                  <p className="text-[10px] opacity-60">{item.sub}</p>
+                </div>
               </Link>
+            );
+          })}
+        </nav>
+
+        <div className="border-t border-white/5 p-4">
+          <Link href="/desk/positions/btc-perp" className="btn btn-primary w-full py-3 text-sm">
+            Start Demo
+          </Link>
+        </div>
+      </aside>
+
+      <div className="flex flex-1 flex-col lg:pl-[220px]">
+        <header className="glass sticky top-0 z-30 flex items-center justify-between px-4 py-3 lg:px-8">
+          <div className="flex items-center gap-3 lg:hidden">
+            <Link href="/desk/positions/btc-perp" className="btn btn-primary px-4 py-2 text-xs">
+              Start Demo
+            </Link>
+            {NAV.map((n) => (
+              <Link key={n.href} href={n.href} className="text-xs text-[#64748b]">{n.label}</Link>
             ))}
           </div>
-          <p className="hidden text-sm text-[#94a3b8] lg:block">
-            Demo SoDEX Portfolio · Powered by SoSoValue & SoDEX
-          </p>
-          <Link
-            href="/"
-            className="text-xs text-[#94a3b8] hover:text-[#e2e8f0]"
-          >
-            ← Landing
-          </Link>
+          <p className="hidden text-sm text-[#64748b] lg:block">Demo Portfolio · SoSoValue + SoDEX</p>
+          <Link href="/" className="text-xs text-[#64748b] hover:text-[#f1f5f9]">Home</Link>
         </header>
-        <main className="flex-1 overflow-auto p-6">{children}</main>
+        <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">{children}</main>
       </div>
     </div>
   );

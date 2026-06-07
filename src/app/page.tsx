@@ -1,142 +1,104 @@
 import Link from "next/link";
-
-const workflow = [
-  "Position",
-  "Market Context",
-  "Risk Engine",
-  "AI Memo",
-  "Protection Plan",
-  "User Approval",
-  "SoDEX Execution",
-  "Audit Log",
-];
+import { HeroPreview } from "@/components/landing/HeroPreview";
+import { Reveal } from "@/components/landing/Reveal";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen terminal-grid">
-      <nav className="border-b border-[#2a3548] bg-[#0a0e17]/90 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <span className="font-mono text-lg font-semibold tracking-tight">Upside</span>
-          <Link
-            href="/desk"
-            className="rounded bg-[#3b82f6] px-4 py-2 text-sm font-medium text-white hover:bg-[#2563eb]"
-          >
-            Open Risk Desk
+    <div className="relative min-h-screen overflow-hidden">
+      <nav className="glass animate-nav fixed inset-x-0 top-0 z-50 px-6 py-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#22d3ee]/15 text-sm font-bold text-[#22d3ee]">↑</div>
+            <span className="display text-lg font-bold tracking-tight">Upside</span>
+          </div>
+          <Link href="/desk/positions/btc-perp" className="btn btn-primary text-sm">
+            Start Demo
           </Link>
         </div>
       </nav>
 
-      <main>
-        <section className="mx-auto max-w-6xl px-6 py-24 text-center">
-          <p className="text-xs uppercase tracking-[0.3em] text-[#3b82f6]">
-            AI Risk Desk for On-Chain Traders
-          </p>
-          <h1 className="mt-4 font-mono text-5xl font-bold tracking-tight md:text-7xl">
-            Upside
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-xl text-[#94a3b8]">
-            Most agents chase alpha.{" "}
-            <span className="text-[#e2e8f0]">Upside protects the downside.</span>
-          </p>
-          <p className="mx-auto mt-4 max-w-3xl text-[#94a3b8]">
-            Upside turns SoSoValue market intelligence and SoDEX position data into
-            real-time liquidation warnings, risk memos, hedge simulations, and
-            protection actions.
-          </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Link
-              href="/desk"
-              className="rounded bg-[#3b82f6] px-8 py-3 text-sm font-semibold text-white hover:bg-[#2563eb]"
-            >
-              Open Risk Desk
-            </Link>
-            <a
-              href="#workflow"
-              className="rounded border border-[#2a3548] px-8 py-3 text-sm hover:bg-[#1a2235]"
-            >
-              See How It Works
-            </a>
-          </div>
-          <p className="mt-6 text-xs text-[#94a3b8]">
-            Powered by SoSoValue market intelligence and SoDEX execution data.
-          </p>
-        </section>
-
-        <section className="border-y border-[#2a3548] bg-[#111827]/50 py-20">
-          <div className="mx-auto max-w-6xl px-6">
-            <div className="grid gap-12 md:grid-cols-2">
-              <div>
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-[#ef4444]">
-                  The Problem
-                </h2>
-                <p className="mt-4 text-2xl font-semibold leading-snug">
-                  Traders do not need more noisy signals. They need capital protection.
-                </p>
-                <p className="mt-4 text-[#94a3b8]">
-                  Signal bots help traders enter positions. Upside helps them survive
-                  positions. Most on-chain traders operate alone — without a risk desk,
-                  a compliance team, or a macro analyst watching their book 24/7.
-                </p>
-              </div>
-              <div>
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-[#22c55e]">
-                  The Solution
-                </h2>
-                <p className="mt-4 text-2xl font-semibold leading-snug">
-                  Live position monitoring + AI risk memo + protection plan
-                </p>
-                <p className="mt-4 text-[#94a3b8]">
-                  Upside watches your positions, detects risk early, explains why, and
-                  helps you protect capital through SoDEX. From market intelligence to
-                  protection action.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="workflow" className="py-20">
-          <div className="mx-auto max-w-6xl px-6">
-            <h2 className="text-center text-sm font-semibold uppercase tracking-wider text-[#94a3b8]">
-              Workflow
-            </h2>
-            <p className="mt-2 text-center text-lg text-[#e2e8f0]">
-              An AI risk desk for one-person on-chain finance businesses.
+      <main className="mx-auto max-w-6xl px-6 pb-24 pt-28">
+        <section className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+          <div className="text-left">
+            <span className="badge badge-mixed animate-in">AI Risk Desk · SoSoValue Buildathon</span>
+            <h1 className="display animate-in delay-100 mt-6 text-4xl font-extrabold leading-[1.15] tracking-tight sm:text-5xl lg:text-[3.25rem]">
+              Most agents chase alpha.
+              <br />
+              <span className="text-gradient-animated bg-gradient-to-r from-[#22d3ee] via-[#2dd4bf] to-[#34d399] bg-clip-text text-transparent">
+                Upside protects the downside.
+              </span>
+            </h1>
+            <p className="animate-in delay-200 mt-5 max-w-xl text-base leading-relaxed text-[#94a3b8] sm:text-lg">
+              Watches your positions, detects risk early, explains why, and
+              prepares protection actions through SoDEX.
             </p>
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
-              {workflow.map((step, i) => (
-                <div key={step} className="flex items-center gap-2">
-                  <span className="card px-3 py-2 font-mono text-xs">{step}</span>
-                  {i < workflow.length - 1 && (
-                    <span className="text-[#94a3b8]">→</span>
-                  )}
-                </div>
+
+            <ul className="mt-8 space-y-3">
+              {[
+                { icon: "◎", text: "Monitor open positions with SoSoValue + SoDEX data", delay: "delay-300" },
+                { icon: "◈", text: "Get an AI memo that explains what is going wrong", delay: "delay-400" },
+                { icon: "↓", text: "Approve reduce-only protection on SoDEX testnet", delay: "delay-500" },
+              ].map((item) => (
+                <li key={item.text} className={`animate-in ${item.delay} flex items-start gap-3 text-sm text-[#cbd5e1]`}>
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#22d3ee]/10 text-xs text-[#22d3ee]">
+                    {item.icon}
+                  </span>
+                  {item.text}
+                </li>
               ))}
+            </ul>
+
+            <div className="animate-in delay-600 mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <Link href="/desk/positions/btc-perp" className="btn btn-primary px-8 py-3.5 text-base">
+                Start BTC Demo →
+              </Link>
+              <Link href="/desk" className="btn btn-secondary px-6 py-3.5">
+                Open Risk Desk
+              </Link>
             </div>
           </div>
+
+          <HeroPreview />
         </section>
 
-        <section className="border-t border-[#2a3548] bg-[#111827]/50 py-20">
-          <div className="mx-auto max-w-6xl px-6 text-center">
-            <h2 className="text-3xl font-bold">
-              Protect the downside before risk becomes a loss.
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl text-[#94a3b8]">
-              Upside is not another AI trading signal bot. It is a professional risk
-              terminal for solo traders, wallets, and signal groups.
-            </p>
-            <Link
-              href="/desk"
-              className="mt-8 inline-block rounded bg-[#3b82f6] px-8 py-3 text-sm font-semibold text-white hover:bg-[#2563eb]"
-            >
-              Open Risk Desk
+        <section className="mt-32 grid gap-6 md:grid-cols-3">
+          {[
+            { n: "01", t: "Monitor", d: "Position and liquidity risk via SoSoValue + SoDEX data" },
+            { n: "02", t: "Understand", d: "AI risk memo explains why a position is becoming dangerous" },
+            { n: "03", t: "Protect", d: "Protection simulation with before/after risk reduction" },
+          ].map((item, i) => (
+            <Reveal key={item.n} delay={i * 120}>
+              <div className="panel h-full p-6 transition-colors duration-300 hover:border-[#22d3ee]/25">
+                <span className="mono text-xs text-[#22d3ee]">{item.n}</span>
+                <h3 className="display mt-2 text-xl font-bold">{item.t}</h3>
+                <p className="mt-2 text-sm text-[#64748b]">{item.d}</p>
+              </div>
+            </Reveal>
+          ))}
+        </section>
+
+        <Reveal>
+        <section className="panel panel-glow mt-16 p-8 md:p-12">
+          <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
+            <div>
+              <p className="label">60-second demo</p>
+              <h2 className="display mt-2 text-3xl font-bold">
+                Risk 84 → 43. One click to start.
+              </h2>
+              <p className="mt-3 max-w-md text-[#64748b]">
+                BTC long is at critical risk. Reduce 35% plan cuts risk in half.
+              </p>
+            </div>
+            <Link href="/desk/positions/btc-perp" className="btn btn-primary shrink-0 px-10 py-4 text-base">
+              Go to Demo →
             </Link>
           </div>
         </section>
+        </Reveal>
       </main>
 
-      <footer className="border-t border-[#2a3548] py-8 text-center text-xs text-[#94a3b8]">
-        Upside · SoSoValue Buildathon · AI Risk Desk for On-Chain Traders
+      <footer className="border-t border-white/5 py-8 text-center text-xs text-[#475569]">
+        Upside · Powered by SoSoValue & SoDEX
       </footer>
     </div>
   );

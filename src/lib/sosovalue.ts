@@ -6,6 +6,9 @@ import {
 import { updateApiStatus } from "./api-visibility";
 
 const BASE_URL = "https://openapi.sosovalue.com/openapi/v1";
+const CACHE_TTL_MS = 60_000;
+
+const cache = new Map<string, { data: unknown; live: boolean; expiresAt: number }>();
 
 function getApiKey(): string | undefined {
   return process.env.SOSOVALUE_API_KEY;
@@ -32,6 +35,18 @@ async function fetchSoSoValue<T>(
     return { data: null, live: false };
   }
 
+  const cached = cache.get(path);
+  if (cached && cached.expiresAt > Date.now()) {
+    updateApiStatus(sourceName, {
+      status: cached.live ? "live" : "fallback",
+      lastFetch: new Date().toISOString(),
+      latencyMs: 0,
+      error: cached.live ? undefined : "Cached fallback",
+      endpoint,
+    });
+    return { data: cached.data as T, live: cached.live };
+  }
+
   const start = Date.now();
   try {
     const res = await fetch(`${BASE_URL}${path}`, {
@@ -39,10 +54,21 @@ async function fetchSoSoValue<T>(
         "x-soso-api-key": apiKey,
         Accept: "application/json",
       },
-      next: { revalidate: 60 },
+      cache: "no-store",
     });
 
     const latencyMs = Date.now() - start;
+
+    if (res.status === 429) {
+      updateApiStatus(sourceName, {
+        status: "fallback",
+        lastFetch: new Date().toISOString(),
+        latencyMs,
+        error: "Rate limit exceeded — wait 1–2 min, then refresh",
+        endpoint,
+      });
+      return { data: null, live: false };
+    }
 
     if (!res.ok) {
       updateApiStatus(sourceName, {
@@ -56,6 +82,7 @@ async function fetchSoSoValue<T>(
     }
 
     const data = (await res.json()) as T;
+    cache.set(path, { data, live: true, expiresAt: Date.now() + CACHE_TTL_MS });
     updateApiStatus(sourceName, {
       status: "live",
       lastFetch: new Date().toISOString(),
@@ -79,8 +106,8 @@ async function fetchSoSoValue<T>(
 export async function getNewsFeed() {
   const { data, live } = await fetchSoSoValue<unknown>(
     "SoSoValue News API",
-    "/feeds/hot-news",
-    "/feeds/hot-news"
+    "/feeds/hot",
+    "/feeds/hot"
   );
 
   if (live && data) {
@@ -93,8 +120,8 @@ export async function getNewsFeed() {
 export async function getEtfFlow(ticker = "us-btc-spot") {
   const { data, live } = await fetchSoSoValue<unknown>(
     "SoSoValue ETF Flow API",
-    `/etf/historical-inflow-chart/${ticker}`,
-    `/etf/historical-inflow-chart/${ticker}`
+    `/etf/${ticker}/inflow-chart`,
+    `/etf/${ticker}/inflow-chart`
   );
 
   if (live && data) {

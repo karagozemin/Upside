@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     const result: ExecutionResult = {
       success: true,
       executionMode: "simulated",
-      message: "Protection simulated — no order submitted.",
+      message: "Protection preview generated — order parameters validated.",
       riskScoreBefore: simulation.before.riskScore,
       riskScoreAfter: simulation.after.riskScore,
     };

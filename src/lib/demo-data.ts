@@ -323,7 +323,7 @@ export const DEMO_REPLAY_EVENTS: ReplayEvent[] = [
     id: "r6",
     timestamp: "2026-06-06T10:58:00Z",
     time: "10:58",
-    title: "Protection plan simulated",
+    title: "Protection plan prepared",
     description: "Option A selected: Reduce 35% — projected risk 84 → 43",
     type: "action",
   },

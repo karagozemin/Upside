@@ -1,119 +1,66 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { OperationProgress } from "@/components/ui/OperationProgress";
+import { useDataLoad } from "@/hooks/useDataLoad";
+import { VISIBILITY_LOAD_STEPS } from "@/lib/operation-steps";
 import type { ApiSourceStatus, DataMode } from "@/lib/types";
 import { DataModeBadge } from "./DataModeBadge";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
 
-interface ApiVisibilityPanelProps {
-  compact?: boolean;
-  className?: string;
-}
+type VisibilityLoad = { sources: ApiSourceStatus[]; mode: DataMode };
 
-export function ApiVisibilityPanel({ compact, className }: ApiVisibilityPanelProps) {
-  const [sources, setSources] = useState<ApiSourceStatus[]>([]);
-  const [mode, setMode] = useState<DataMode>("demo");
-  const [loading, setLoading] = useState(true);
+export function ApiVisibilityPanel({ compact }: { compact?: boolean }) {
+  const { data, loading, operationSteps } = useDataLoad<VisibilityLoad>(
+    VISIBILITY_LOAD_STEPS,
+    async () => {
+      const j = await fetch("/api/visibility").then((r) => r.json());
+      return { sources: j.data ?? [], mode: j.meta?.mode ?? "demo" };
+    },
+    [],
+    { stepMs: 450, minTotalMs: 1000 },
+  );
 
-  useEffect(() => {
-    fetch("/api/visibility")
-      .then((r) => r.json())
-      .then((json) => {
-        setSources(json.data ?? []);
-        setMode(json.meta?.mode ?? "demo");
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  const sources = data?.sources ?? [];
+  const mode = data?.mode ?? "demo";
 
-  if (loading) {
+  if (compact) {
+    const live = sources.filter((s) => s.status === "live").length;
     return (
-      <div className={cn("card p-4", className)}>
-        <p className="text-sm text-[#94a3b8]">Loading API status...</p>
+      <div className="panel flex items-center justify-between p-4">
+        <span className="text-sm text-[#64748b]">{loading ? "Checking…" : `${live}/${sources.length} live`}</span>
+        <DataModeBadge mode={mode} />
       </div>
     );
   }
 
-  if (compact) {
-    const live = sources.filter((s) => s.status === "live").length;
-    const fallback = sources.filter((s) => s.status === "fallback").length;
+  if (loading) {
     return (
-      <div className={cn("card p-4", className)}>
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-wider text-[#94a3b8]">
-              Live Data & API Visibility
-            </p>
-            <p className="mt-1 text-sm text-[#e2e8f0]">
-              {live} live · {fallback} fallback · {sources.length} sources
-            </p>
-          </div>
-          <DataModeBadge mode={mode} />
-        </div>
+      <div className="panel p-5">
+        {operationSteps && <OperationProgress steps={operationSteps} title="Checking API connectivity" />}
       </div>
     );
   }
 
   return (
-    <div className={cn("card", className)}>
-      <div className="flex items-center justify-between border-b border-[#2a3548] px-6 py-4">
-        <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wider">
-            Live Data & API Visibility
-          </h3>
-          <p className="mt-1 text-xs text-[#94a3b8]">
-            Judge-facing panel — never hides mock data
-          </p>
-        </div>
+    <div className="panel result-reveal overflow-hidden">
+      <div className="flex items-center justify-between border-b border-white/5 px-5 py-4">
+        <p className="text-sm font-semibold">API Visibility</p>
         <DataModeBadge mode={mode} />
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-[#2a3548] text-left text-xs uppercase tracking-wider text-[#94a3b8]">
-              <th className="px-6 py-3">Source</th>
-              <th className="px-6 py-3">Endpoint</th>
-              <th className="px-6 py-3">Status</th>
-              <th className="px-6 py-3">Latency</th>
-              <th className="px-6 py-3">Last Fetch</th>
-              <th className="px-6 py-3">Error</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sources.map((source) => (
-              <tr
-                key={source.name}
-                className="border-b border-[#2a3548]/50 hover:bg-[#111827]/50"
-              >
-                <td className="px-6 py-3 font-medium">{source.name}</td>
-                <td className="px-6 py-3 font-mono text-xs text-[#94a3b8]">
-                  {source.endpoint}
-                </td>
-                <td className="px-6 py-3">
-                  <span
-                    className={cn(
-                      "rounded px-2 py-0.5 text-xs font-medium uppercase",
-                      source.status === "live" ? "badge-live" : "badge-demo"
-                    )}
-                  >
-                    {source.status === "live" ? "Live" : "Fallback"}
-                  </span>
-                </td>
-                <td className="px-6 py-3 font-mono text-xs">
-                  {source.latencyMs !== null ? `${source.latencyMs}ms` : "—"}
-                </td>
-                <td className="px-6 py-3 font-mono text-xs text-[#94a3b8]">
-                  {source.lastFetch
-                    ? format(new Date(source.lastFetch), "HH:mm:ss")
-                    : "—"}
-                </td>
-                <td className="px-6 py-3 text-xs text-[#ef4444]">
-                  {source.error ?? "—"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="divide-y divide-white/5">
+        {sources.map((s) => (
+          <div key={s.name} className="flex items-center justify-between px-5 py-3 text-sm">
+            <div>
+              <p className="font-medium">{s.name}</p>
+              <p className="mono text-[10px] text-[#64748b]">{s.endpoint}</p>
+            </div>
+            <div className="text-right">
+              <span className={cn("badge", s.status === "live" ? "badge-live" : "badge-demo")}>{s.status}</span>
+              {s.latencyMs != null && <p className="mono mt-1 text-[10px] text-[#64748b]">{s.latencyMs}ms</p>}
+              {s.error && <p className="mt-1 text-[10px] text-[#fb7185]">{s.error}</p>}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

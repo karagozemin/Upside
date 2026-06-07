@@ -1,77 +1,56 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Timeline } from "@/components/desk/Timeline";
+import { OperationProgress } from "@/components/ui/OperationProgress";
+import { useDataLoad } from "@/hooks/useDataLoad";
+import { REPLAY_LOAD_STEPS } from "@/lib/operation-steps";
 import type { ReplayEvent } from "@/lib/types";
-import {
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-const sparkData = [
-  { time: "10:20", score: 62 },
-  { time: "10:34", score: 68 },
-  { time: "10:51", score: 76 },
-  { time: "10:55", score: 84 },
-  { time: "10:58", score: 84 },
-  { time: "11:02", score: 43 },
+const CHART = [
+  { t: "10:20", s: 62 }, { t: "10:34", s: 68 }, { t: "10:51", s: 76 },
+  { t: "10:55", s: 84 }, { t: "11:02", s: 43 },
 ];
 
 export default function ReplayPage() {
-  const [events, setEvents] = useState<ReplayEvent[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("/api/replay")
-      .then((r) => r.json())
-      .then((json) => setEvents(json.data ?? []))
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) {
-    return <p className="text-[#94a3b8]">Loading risk replay...</p>;
-  }
+  const { data: events, loading, operationSteps } = useDataLoad<ReplayEvent[]>(
+    REPLAY_LOAD_STEPS,
+    async () => {
+      const j = await fetch("/api/replay").then((r) => r.json());
+      return j.data ?? [];
+    },
+    [],
+    { stepMs: 500, minTotalMs: 1200 },
+  );
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Risk Replay</h1>
-        <p className="mt-1 text-sm text-[#94a3b8]">
-          BTC-PERP timeline — how risk evolved from 62 → 84 → 43 after protection.
-        </p>
-      </div>
+    <div className="mx-auto max-w-2xl animate-rise">
+      <Link href="/desk/positions/btc-perp" className="cursor-pointer text-xs text-[#22d3ee]">← Back to Demo</Link>
+      <p className="label mt-4">Risk Replay</p>
+      <h1 className="display text-3xl font-bold">62 → 84 → 43</h1>
+      <p className="mt-2 text-sm text-[#64748b]">How BTC risk evolved over time</p>
 
-      <div className="card p-4">
-        <p className="mb-2 text-xs uppercase tracking-wider text-[#94a3b8]">
-          Risk Score Evolution
-        </p>
-        <ResponsiveContainer width="100%" height={120}>
-          <LineChart data={sparkData}>
-            <XAxis dataKey="time" tick={{ fill: "#94a3b8", fontSize: 10 }} />
-            <YAxis domain={[0, 100]} tick={{ fill: "#94a3b8", fontSize: 10 }} />
-            <Tooltip
-              contentStyle={{
-                background: "#1a2235",
-                border: "1px solid #2a3548",
-                borderRadius: "4px",
-              }}
-            />
-            <Line
-              type="monotone"
-              dataKey="score"
-              stroke="#3b82f6"
-              strokeWidth={2}
-              dot={{ fill: "#3b82f6", r: 4 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+      {loading && operationSteps && (
+        <OperationProgress steps={operationSteps} title="Building risk replay" className="mt-8" />
+      )}
 
-      <Timeline events={events} />
+      {!loading && (
+        <>
+          <div className="panel result-reveal mt-8 p-4">
+            <ResponsiveContainer width="100%" height={140}>
+              <LineChart data={CHART}>
+                <XAxis dataKey="t" tick={{ fill: "#64748b", fontSize: 10 }} axisLine={false} tickLine={false} />
+                <YAxis domain={[0, 100]} tick={{ fill: "#64748b", fontSize: 10 }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={{ background: "#111827", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8 }} />
+                <Line type="monotone" dataKey="s" stroke="#22d3ee" strokeWidth={2} dot={{ fill: "#22d3ee", r: 4 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="result-reveal mt-8"><Timeline events={events ?? []} /></div>
+        </>
+      )}
     </div>
   );
 }

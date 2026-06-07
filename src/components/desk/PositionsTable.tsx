@@ -2,71 +2,52 @@
 
 import Link from "next/link";
 import type { Position } from "@/lib/types";
-import { formatPrice, formatUsd } from "@/lib/utils";
+import { formatPrice, cn } from "@/lib/utils";
 import { RiskBadge } from "./RiskBadge";
-import { cn } from "@/lib/utils";
 
-interface PositionsTableProps {
-  positions: Position[];
-}
+export function PositionsTable({ positions }: { positions: Position[] }) {
+  const btc = positions.find((p) => p.id === "btc-perp");
 
-export function PositionsTable({ positions }: PositionsTableProps) {
   return (
-    <div className="card overflow-hidden">
-      <div className="border-b border-[#2a3548] px-6 py-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wider">Open Positions</h3>
-      </div>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-[#2a3548] text-left text-xs uppercase tracking-wider text-[#94a3b8]">
-              <th className="px-6 py-3">Asset</th>
-              <th className="px-6 py-3">Side</th>
-              <th className="px-6 py-3">Size</th>
-              <th className="px-6 py-3">Entry</th>
-              <th className="px-6 py-3">Current</th>
-              <th className="px-6 py-3">Liq. Dist.</th>
-              <th className="px-6 py-3">Risk Score</th>
-              <th className="px-6 py-3">Verdict</th>
-              <th className="px-6 py-3">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {positions.map((pos) => (
-              <tr
-                key={pos.id}
-                className={cn(
-                  "border-b border-[#2a3548]/50 transition-colors hover:bg-[#111827]/80",
-                  pos.id === "btc-perp" && "bg-[#ef4444]/5"
-                )}
-              >
-                <td className="px-6 py-3">
-                  <Link
-                    href={`/desk/positions/${pos.id}`}
-                    className="font-medium text-[#3b82f6] hover:underline"
-                  >
-                    {pos.asset}
-                  </Link>
-                </td>
-                <td className="px-6 py-3 capitalize">{pos.side}</td>
-                <td className="px-6 py-3 font-mono text-xs">
-                  {pos.size} ({formatUsd(pos.sizeUsd)})
-                </td>
-                <td className="px-6 py-3 font-mono text-xs">{formatPrice(pos.entryPrice)}</td>
-                <td className="px-6 py-3 font-mono text-xs">{formatPrice(pos.currentPrice)}</td>
-                <td className="px-6 py-3 font-mono text-xs">{pos.liquidationDistance}%</td>
-                <td className="px-6 py-3 font-mono font-semibold">{pos.riskScore}</td>
-                <td className="px-6 py-3">
-                  <RiskBadge
-                    verdict={pos.verdict}
-                    pulse={pos.verdict === "critical"}
-                  />
-                </td>
-                <td className="px-6 py-3 text-xs text-[#94a3b8]">{pos.recommendedAction}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="space-y-4">
+      {btc && (
+        <Link href="/desk/positions/btc-perp" className="group block cursor-pointer">
+          <div className="panel panel-glow overflow-hidden transition-transform group-hover:scale-[1.01]">
+            <div className="flex flex-wrap items-center justify-between gap-4 p-6">
+              <div>
+                <p className="label text-[#fb7185]">Start demo here — click</p>
+                <h3 className="display mt-1 text-2xl font-bold">{btc.asset} Long</h3>
+                <p className="mt-1 text-sm text-[#64748b]">Risk {btc.riskScore} · {btc.recommendedAction}</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <RiskBadge verdict={btc.verdict} pulse />
+                <span className="btn btn-primary px-6 py-3">Open →</span>
+              </div>
+            </div>
+          </div>
+        </Link>
+      )}
+
+      <div className="panel overflow-hidden">
+        <div className="border-b border-white/5 px-5 py-4">
+          <p className="text-sm font-semibold">All Positions</p>
+        </div>
+        <div className="divide-y divide-white/5">
+          {positions.map((pos) => (
+            <Link key={pos.id} href={`/desk/positions/${pos.id}`}
+              className="flex cursor-pointer items-center justify-between px-5 py-4 transition hover:bg-white/[0.03]">
+              <div>
+                <span className="font-medium">{pos.asset}</span>
+                <span className="ml-2 text-xs capitalize text-[#64748b]">{pos.side}</span>
+                <p className="mono mt-0.5 text-xs text-[#64748b]">{formatPrice(pos.currentPrice)} · {pos.riskScore}/100</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <RiskBadge verdict={pos.verdict} />
+                <span className={cn("text-sm", pos.id === "btc-perp" ? "text-[#22d3ee]" : "text-[#64748b]")}>→</span>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

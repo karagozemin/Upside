@@ -3,14 +3,14 @@ import type { ApiSourceStatus, DataMode } from "./types";
 const SOURCES: ApiSourceStatus[] = [
   {
     name: "SoSoValue News API",
-    endpoint: "/feeds/hot-news",
+    endpoint: "/feeds/hot",
     status: "pending",
     lastFetch: null,
     latencyMs: null,
   },
   {
     name: "SoSoValue ETF Flow API",
-    endpoint: "/etf/historical-inflow",
+    endpoint: "/etf/{ticker}/inflow-chart",
     status: "pending",
     lastFetch: null,
     latencyMs: null,
