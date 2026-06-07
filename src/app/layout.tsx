@@ -9,6 +9,10 @@ const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mon
 export const metadata: Metadata = {
   title: "Upside — AI Risk Desk",
   description: "AI risk desk that monitors positions, explains rising risk, and prepares protection on SoDEX.",
+  icons: {
+    icon: [{ url: "/upside.png", type: "image/png" }],
+    apple: [{ url: "/upside.png", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

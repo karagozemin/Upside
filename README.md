@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="upside.png" width="250" alt="Upside logo" />
+</p>
+
 # Upside
 
 **AI Risk Desk for On-Chain Traders**

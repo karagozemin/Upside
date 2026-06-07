@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Logo } from "@/components/Logo";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -18,13 +19,7 @@ export default function DeskLayout({ children }: { children: React.ReactNode }) 
     <div className="flex min-h-screen">
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-[220px] flex-col border-r border-white/5 bg-[#030508]/90 backdrop-blur-xl lg:flex">
         <div className="border-b border-white/5 p-5">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#22d3ee]/15 text-[#22d3ee]">↑</div>
-            <div>
-              <p className="display text-base font-bold">Upside</p>
-              <p className="text-[10px] text-[#64748b]">Risk Desk</p>
-            </div>
-          </Link>
+          <Logo size={36} subtitle="Risk Desk" href="/" />
         </div>
 
         <nav className="flex-1 space-y-1 p-3">
@@ -60,6 +55,7 @@ export default function DeskLayout({ children }: { children: React.ReactNode }) 
       <div className="flex flex-1 flex-col lg:pl-[220px]">
         <header className="glass sticky top-0 z-30 flex items-center justify-between px-4 py-3 lg:px-8">
           <div className="flex items-center gap-3 lg:hidden">
+            <Logo size={28} showText={false} href="/" />
             <Link href="/desk/positions/btc-perp" className="btn btn-primary px-4 py-2 text-xs">
               Start Demo
             </Link>

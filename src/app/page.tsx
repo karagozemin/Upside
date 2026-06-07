@@ -1,16 +1,14 @@
 import Link from "next/link";
 import { HeroPreview } from "@/components/landing/HeroPreview";
 import { Reveal } from "@/components/landing/Reveal";
+import { Logo } from "@/components/Logo";
 
 export default function LandingPage() {
   return (
     <div className="relative min-h-screen overflow-hidden">
       <nav className="glass animate-nav fixed inset-x-0 top-0 z-50 px-6 py-4">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#22d3ee]/15 text-sm font-bold text-[#22d3ee]">↑</div>
-            <span className="display text-lg font-bold tracking-tight">Upside</span>
-          </div>
+          <Logo size={32} href="/" className="[&_p]:text-lg" />
           <Link href="/desk/positions/btc-perp" className="btn btn-primary text-sm">
             Start Demo
           </Link>
