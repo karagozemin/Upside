@@ -85,6 +85,8 @@ export interface BeforeAfterMetrics {
   riskScore: number;
   liquidationDistance: number;
   maxDrawdown: number;
+  exposure?: number;
+  estimatedLossAt3Pct?: number;
 }
 
 export interface ProtectionSimulation {
@@ -165,9 +167,22 @@ export interface ExecutionResult {
   success: boolean;
   executionMode: ExecutionMode;
   orderId?: string;
+  httpStatus?: number;
+  signingMethod?: "eip712" | "none";
+  auditHash?: string;
   message: string;
   riskScoreBefore: number;
   riskScoreAfter: number;
+}
+
+export interface TrackRecordEvent {
+  id: string;
+  asset: string;
+  riskBefore: number;
+  riskAfter: number;
+  action: string;
+  outcome: "PROTECTED" | "HIT" | "DRIFT" | "FALSE_ALARM";
+  note: string;
 }
 
 export interface PortfolioSummary {

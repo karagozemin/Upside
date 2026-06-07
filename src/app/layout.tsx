@@ -8,7 +8,7 @@ const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mon
 
 export const metadata: Metadata = {
   title: "Upside — AI Risk Desk",
-  description: "AI risk desk that monitors positions, explains rising risk, and prepares protection on SoDEX.",
+  description: "AI risk desk that turns SoSoValue intelligence into explainable risk alerts and protects SoDEX positions through user-approved actions.",
   icons: {
     icon: [{ url: "/upside.png", type: "image/png" }],
     apple: [{ url: "/upside.png", type: "image/png" }],

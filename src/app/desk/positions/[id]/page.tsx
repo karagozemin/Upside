@@ -2,12 +2,16 @@
 
 import { use, useState } from "react";
 import Link from "next/link";
+import { ApiEvidencePanel } from "@/components/desk/ApiEvidencePanel";
 import { BeforeAfterPanel } from "@/components/desk/BeforeAfterPanel";
 import { ExecutionPreview } from "@/components/desk/ExecutionPreview";
 import { ProtectionOptionCard } from "@/components/desk/ProtectionOptionCard";
 import { RiskBadge } from "@/components/desk/RiskBadge";
 import { RiskBreakdownChart } from "@/components/desk/RiskBreakdownChart";
+import { RiskFactorBreakdown } from "@/components/desk/RiskFactorBreakdown";
 import { RiskMemoCard } from "@/components/desk/RiskMemoCard";
+import { SafetyControls } from "@/components/desk/SafetyControls";
+import { TrackRecordPanel } from "@/components/desk/TrackRecordPanel";
 import { OperationProgress } from "@/components/ui/OperationProgress";
 import { useDataLoad } from "@/hooks/useDataLoad";
 import { PLAN_SELECT_STEPS, POSITION_LOAD_STEPS } from "@/lib/operation-steps";
@@ -17,10 +21,10 @@ import { formatPrice } from "@/lib/utils";
 import { RISK_WEIGHTS } from "@/lib/demo-data";
 
 const STEPS = [
-  { n: 1, title: "Risk Memo", sub: "Why risky?", id: "memo" },
-  { n: 2, title: "Pick Plan", sub: "Reduce 35%", id: "plan" },
-  { n: 3, title: "Impact", sub: "84 → 43", id: "impact" },
-  { n: 4, title: "Execute", sub: "SoDEX Testnet", id: "exec" },
+  { n: 1, title: "Risk Memo", sub: "Explain why", id: "memo" },
+  { n: 2, title: "Protection Plan", sub: "Reduce/Hedge/Close", id: "plan" },
+  { n: 3, title: "Impact Preview", sub: "84 → 43", id: "impact" },
+  { n: 4, title: "SoDEX Action", sub: "Sign & audit", id: "exec" },
 ];
 
 type PositionLoad = {
@@ -108,6 +112,7 @@ export default function PositionPage({ params }: { params: Promise<{ id: string 
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <h1 className="display text-3xl font-bold">{position.asset}</h1>
         <RiskBadge verdict={position.verdict} score={position.riskScore} pulse />
+        <span className="badge badge-live text-[10px]">Live-priced · SoDEX + SoSoValue</span>
       </div>
 
       <div className="mt-4 grid grid-cols-4 gap-2">
@@ -129,14 +134,19 @@ export default function PositionPage({ params }: { params: Promise<{ id: string 
         ))}
       </div>
 
+      <div className="mt-6">
+        <ApiEvidencePanel compact />
+      </div>
+
       <div className="mt-8 space-y-10">
         <section id="memo" className="scroll-mt-24 step-line">
-          <p className="label mb-3">Step 1 — Read the AI memo</p>
-          {memo && <RiskMemoCard memo={memo} />}
+          <p className="label mb-3">Step 1 — Risk Memo</p>
+          <RiskFactorBreakdown position={position} />
+          <div className="mt-4">{memo && <RiskMemoCard memo={memo} />}</div>
         </section>
 
         <section id="plan" className="scroll-mt-24 step-line">
-          <p className="label mb-3">Step 2 — Select the recommended plan</p>
+          <p className="label mb-3">Step 2 — Protection Plan (Reduce / Hedge / Close)</p>
           <div className="space-y-3">
             {activeOptions.map((o) => (
               <ProtectionOptionCard
@@ -153,23 +163,28 @@ export default function PositionPage({ params }: { params: Promise<{ id: string 
 
         {activeSimulation && (
           <section id="impact" className="scroll-mt-24 step-line">
-            <p className="label mb-3">Step 3 — See the impact</p>
+            <p className="label mb-3">Step 3 — Impact Preview</p>
             <BeforeAfterPanel before={activeSimulation.before} after={activeSimulation.after} />
           </section>
         )}
 
         {activeSimulation && (
           <section id="exec" className="scroll-mt-24">
-            <p className="label mb-3">Step 4 — Preview and execute on SoDEX</p>
+            <p className="label mb-3">Step 4 — SoDEX Action</p>
             <ExecutionPreview positionId={id} optionId={activeSelectedId} simulation={activeSimulation} memo={memo} />
           </section>
         )}
 
+        <SafetyControls />
+        <TrackRecordPanel />
+
         <div className="panel p-5">
-          <p className="font-semibold">Demo complete?</p>
-          <div className="mt-3 flex gap-3">
-            <Link href="/desk/replay" className="btn btn-primary">Risk Replay →</Link>
-            <Link href="/desk/audit" className="btn btn-secondary">Audit Log →</Link>
+          <p className="font-semibold">Audit Replay</p>
+          <p className="mt-1 text-xs text-[#64748b]">Verify the same inputs produce the same risk score and recommendation.</p>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <Link href="/desk/replay" className="btn btn-primary">Audit Replay →</Link>
+            <Link href="/desk/audit" className="btn btn-secondary">Audit Log</Link>
+            <Link href="/diag" className="btn btn-secondary">API Evidence</Link>
           </div>
         </div>
 

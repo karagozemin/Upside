@@ -222,15 +222,49 @@ export function getDemoPosition(id: string): PositionDetail | null {
 
 export const BTC_PROTECTION_AFTER = {
   riskScore: 43,
-  liquidationDistance: 11.7,
+  liquidationDistance: 11.8,
   maxDrawdown: -7,
+  exposure: 2.8,
+  estimatedLossAt3Pct: -170,
 };
 
 export const BTC_PROTECTION_BEFORE = {
   riskScore: 84,
   liquidationDistance: 4.2,
   maxDrawdown: -18,
+  exposure: 5,
+  estimatedLossAt3Pct: -420,
 };
+
+export const DEMO_TRACK_RECORD = [
+  {
+    id: "tr-041",
+    asset: "BTC-PERP",
+    riskBefore: 82,
+    riskAfter: 45,
+    action: "Reduce 30%",
+    outcome: "PROTECTED" as const,
+    note: "Liquidation buffer restored after ETF outflow shock",
+  },
+  {
+    id: "tr-040",
+    asset: "ETH-PERP",
+    riskBefore: 76,
+    riskAfter: 48,
+    action: "Hedge 20%",
+    outcome: "PROTECTED" as const,
+    note: "Drawdown capped during macro vol window",
+  },
+  {
+    id: "tr-039",
+    asset: "SOL-PERP",
+    riskBefore: 68,
+    riskAfter: 68,
+    action: "No action",
+    outcome: "DRIFT" as const,
+    note: "Risk expired without intervention — watch band",
+  },
+];
 
 export const DEMO_NARRATIVE_SECTORS: NarrativeSector[] = [
   {

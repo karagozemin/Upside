@@ -3,7 +3,7 @@ import type { ApiSourceStatus, DataMode } from "./types";
 const SOURCES: ApiSourceStatus[] = [
   {
     name: "SoSoValue News API",
-    endpoint: "/feeds/hot",
+    endpoint: "/news/hot",
     status: "pending",
     lastFetch: null,
     latencyMs: null,

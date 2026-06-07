@@ -7,7 +7,9 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/desk", icon: "◉", label: "Overview", sub: "Command center" },
-  { href: "/desk/positions/btc-perp", icon: "⚡", label: "BTC Demo", sub: "Main flow", primary: true },
+  { href: "/judge", icon: "▶", label: "Judge Demo", sub: "60 seconds", primary: true },
+  { href: "/desk/positions/btc-perp", icon: "⚡", label: "BTC Demo", sub: "Full flow" },
+  { href: "/diag", icon: "◈", label: "API Evidence", sub: "/diag" },
   { href: "/desk/replay", icon: "↻", label: "Replay", sub: "Timeline" },
   { href: "/desk/audit", icon: "☰", label: "Audit", sub: "Decision log" },
 ];

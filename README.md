@@ -4,354 +4,238 @@
 
 # Upside
 
-**AI Risk Desk for On-Chain Traders**
+**The AI risk desk for SoDEX traders.**
 
-> Most agents chase alpha. Upside protects the downside.
+> Most submissions help users find trades. **Upside helps users survive trades.**
 
-Upside is an AI-powered risk desk for solo on-chain traders. It connects **SoSoValue** market intelligence with **SoDEX** position and liquidity data to detect liquidation, drawdown, liquidity, news, ETF-flow, macro, and narrative risk before it becomes a loss. Instead of another buy/sell signal, Upside explains *why* a position is becoming dangerous, simulates protective actions, and prepares user-approved reduce-only orders on SoDEX testnet.
+Upside is an AI risk desk for on-chain traders that turns **SoSoValue** market intelligence into explainable risk alerts, then protects live **SoDEX** positions through user-approved hedge, reduce, or close actions.
 
-**Live repo:** [github.com/karagozemin/Upside](https://github.com/karagozemin/Upside)
-
----
-
-## Problem
-
-Traders do not need more noisy signals — they need capital protection. Signal bots help traders enter positions. Upside helps them survive positions. Solo on-chain traders, wallets, and one-person finance businesses operate without a risk desk watching their book 24/7.
-
-## Solution
-
-Upside turns SoSoValue market intelligence and SoDEX position data into:
-
-- Real-time liquidation and drawdown warnings
-- Groq-powered AI risk memos with evidence
-- Protection plan options with before/after risk impact
-- Reduce-only order preview and SoDEX testnet execution
-- Audit trail and risk replay timeline
-- Per-source Live / Fallback transparency
-
-## One-Line Pitch (for judges)
-
-> "Upside watches my positions, detects risk early, explains why, and helps me protect capital through SoDEX."
+**GitHub:** [github.com/karagozemin/Upside](https://github.com/karagozemin/Upside)
 
 ---
 
-## Pages & Routes
+## One-liner
 
-| Route | Purpose |
-|-------|---------|
-| `/` | Landing page with guided hero and live risk preview card |
-| `/desk` | Command Center — portfolio overview, demo CTA |
-| `/desk/positions/btc-perp` | **Main demo** — 4-step guided flow (memo → plan → impact → execute) |
-| `/desk/replay` | Risk replay timeline (62 → 84 → 43) |
-| `/desk/audit` | Decision audit log |
-| `/desk/narrative` | Sector narrative radar |
+**Upside detects position risk early using SoSoValue market intelligence, explains the risk in plain English, and protects SoDEX positions through user-approved hedge, reduce, or close actions.**
 
-### API Routes
+---
 
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
-| `/api/portfolio` | GET | Portfolio summary + risk scores |
-| `/api/positions/[id]` | GET | Position detail + breakdown |
-| `/api/risk-memo` | POST | Generate AI risk memo (Groq) |
-| `/api/protection-plans` | POST | Protection options + simulation |
-| `/api/execute` | POST | Preview or execute reduce-only order |
-| `/api/narrative` | GET | Sector narrative states |
-| `/api/replay` | GET | Risk event timeline |
-| `/api/audit` | GET | Audit entries |
-| `/api/visibility` | GET | Live / Fallback status per data source |
+## Why this matters
+
+Signal bots help traders **enter**. Upside helps them **survive** open positions.
+
+Solo on-chain traders have no 24/7 risk desk. When ETF outflows accelerate, orderbook depth thins, or liquidation buffers shrink — Upside catches it early, explains why with evidence, and prepares protection you approve before signing.
+
+**Upside is not a black-box trading bot. It is a risk copilot. It never moves funds without explicit user approval.**
+
+---
+
+## 60-second judge path
+
+| Step | Route | What judges see |
+|------|-------|-----------------|
+| **Judge Mode** | [`/judge`](http://localhost:3000/judge) | Automated 60-sec walkthrough |
+| **1 — Risk Memo** | `/desk/positions/btc-perp` | Factor breakdown + Groq AI memo |
+| **2 — Protection Plan** | same | Reduce 35% / Hedge 20% / Close |
+| **3 — Impact Preview** | same | Risk 84→43, liq 4.2%→11.8%, exposure 5x→2.8x |
+| **4 — SoDEX Action** | same | EIP-712 flow + execution proof |
+| **Audit Replay** | `/desk/replay` | 62 → 84 → 43 timeline |
+| **API Evidence** | [`/diag`](http://localhost:3000/diag) | Live vs simulated per source |
+
+```bash
+npm install && npm run dev
+# → http://localhost:3000/judge
+# → http://localhost:3000/desk/positions/btc-perp
+# → http://localhost:3000/diag
+```
+
+---
+
+## What is real vs simulated
+
+| Component | Status |
+|-----------|--------|
+| SoSoValue news (`/news/hot`) | **Live** when `SOSOVALUE_API_KEY` set |
+| SoSoValue ETF flow (`/etf/.../inflow-chart`) | **Live** when key set (cached; may show demo on 429) |
+| SoSoValue indices (`/indices`) | **Live** when key set |
+| SoDEX orderbook (`/markets/.../orderbook`) | **Live** — public endpoint |
+| SoDEX wallet positions | **Live** when `SODEX_USER_ADDRESS` set |
+| BTC-PERP desk position | **Live-priced** — wallet positions or orderbook showcase when wallet empty |
+| Groq AI risk memos | **Live** when `GROQ_API_KEY` set |
+| SoDEX order placement | **Testnet** when signing keys configured; **judge-safe fallback** otherwise |
+| Risk replay / audit | **Deterministic** — same inputs → same score |
+
+Full evidence panel: **`/diag`** and **API Evidence** on position page.
+
+---
+
+## SoSoValue APIs used
+
+| Endpoint | Risk use |
+|----------|----------|
+| `GET /news/hot` | Crypto news sentiment → news risk factor |
+| `GET /etf/{ticker}/inflow-chart` | BTC ETF institutional flow → ETF risk factor |
+| `GET /indices` | Sector momentum → narrative radar |
+| `GET /macro/events` | Macro event window → macro risk factor |
+
+- Base: `https://openapi.sosovalue.com/openapi/v1`
+- Auth: `x-soso-api-key`
+- 5min cache, sequential request queue, graceful 429 fallback with stale live cache
+
+---
+
+## SoDEX integration
+
+| Endpoint | Use |
+|----------|-----|
+| `GET /markets/{symbol}/orderbook` | Liquidity depth, slippage estimate |
+| `GET /accounts/{address}/positions` | Live positions (when wallet configured) |
+| `POST /trade/orders` | EIP-712 signed reduce-only protection orders |
+
+- Testnet: `https://testnet-gw.sodex.dev/api/v1/perps`
+- Signing: Viem EIP-712 via `sodex-signer.ts`
+- Keys: [sodex.com/apikeys](https://sodex.com/apikeys) (separate from SoSoValue)
+
+### Execution proof (shown in UI after Step 4)
+
+```
+Order ID · HTTP Status · EIP-712 signing · Audit hash · Risk delta
+```
+
+When signing keys are absent: full UI completes with honest **judge-safe simulated** disclosure.
+
+---
+
+## Risk engine formula
+
+```
+Total Risk Score (0–100) =
+  Liquidity / Slippage     × 25%
++ Market Stress (vol)      × 20%
++ Position Exposure        × 20%
++ Macro Events             × 15%
++ News / Narrative Shock   × 10%
++ ETF / Institutional Flow ×  5%
++ Sector Narrative         ×  5%
+```
+
+Each factor shows **score + why** in the Explainable Risk Engine panel (Step 1).
+
+**Verdict bands:** 0–30 Safe · 31–60 Watch · 61–80 Defensive · 81–100 Critical
+
+---
+
+## Safety controls
+
+- No auto-trade — user checkbox + sign required
+- Max single action: 40% of position
+- Slippage cap: 1.5%
+- Dry-run preview before signing
+- Circuit breaker on critical liquidation proximity
+- Non-custodial — wallet signs directly
+- Testnet default
 
 ---
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     Next.js 15 App Router                   │
-├──────────────┬──────────────────────────────────────────────┤
-│   Landing    │              Risk Desk (/desk)               │
-│   Page       │  Command Center · BTC Demo · Narrative       │
-│              │  Replay · Audit Log · API Visibility         │
-├──────────────┴──────────────────────────────────────────────┤
-│                      API Routes Layer                        │
-│  /portfolio · /positions · /risk-memo · /protection-plans  │
-│  /execute · /narrative · /replay · /audit · /visibility    │
-├─────────────────────────────────────────────────────────────┤
-│                     Service Layer (/lib)                     │
-│  sosovalue.ts · sodex.ts · sodex-signer.ts · risk-engine.ts │
-│  ai-risk-memo.ts · demo-data.ts · audit-log.ts              │
-│  api-visibility.ts · run-operation.ts                       │
-├──────────────────────┬──────────────────────────────────────┤
-│   SoSoValue OpenAPI  │           SoDEX Perps API            │
-│   News · ETF · Index │   Orderbook · Positions · Orders     │
-├──────────────────────┴──────────────────────────────────────┤
-│              Groq AI (llama-3.3-70b-versatile)               │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Project Structure
-
-```
-src/
-├── app/
-│   ├── page.tsx                    # Landing
-│   ├── desk/                       # Risk desk shell + pages
-│   └── api/                        # Server routes
-├── components/
-│   ├── desk/                       # Desk UI (memo, execution, charts…)
-│   ├── landing/                    # Hero preview + scroll reveal
-│   └── ui/                         # OperationProgress, shared UI
-├── hooks/useDataLoad.ts            # Async load + step animation
-└── lib/                            # Integrations + risk engine
+Landing · Judge Mode (/judge) · Diag (/diag)
+         ↓
+Risk Desk → BTC Demo (4-step flow)
+         ↓
+API Routes → sosovalue.ts · sodex.ts · risk-engine.ts · ai-risk-memo.ts
+         ↓
+SoSoValue OpenAPI · SoDEX Perps · Groq AI
 ```
 
 ---
 
-## How SoSoValue Is Used
+## Pages
 
-| Module | Endpoint | Risk Use |
-|--------|----------|----------|
-| Hot feeds | `GET /feeds/hot` | News risk scoring |
-| ETF flow | `GET /etf/{ticker}/inflow-chart` | BTC ETF inflow risk |
-| Indices | `GET /indices` | Sector / narrative radar |
-| Macro | `GET /macro/events` | Macro event risk (fallback when unavailable) |
-
-- **Base URL:** `https://openapi.sosovalue.com/openapi/v1`
-- **Auth:** `x-soso-api-key` header
-- **Key source:** [openapi.sosovalue.com](https://openapi.sosovalue.com)
-- **Caching:** 60s in-memory cache; graceful 429 handling
-
-> **Note:** SoSoValue and SoDEX use **different** API systems and keys.
-
----
-
-## How SoDEX Is Used
-
-| Endpoint | Risk Use |
-|----------|----------|
-| `GET /markets/{symbol}/orderbook` | Liquidity depth, slippage estimate (public — no key required) |
-| `GET /accounts/{address}/positions` | Live portfolio positions |
-| `POST /trade/orders` | Reduce-only protection execution (EIP-712 signed) |
-
-- **Testnet:** `https://testnet-gw.sodex.dev/api/v1/perps`
-- **Mainnet:** `https://mainnet-gw.sodex.dev/api/v1/perps` (set `SODEX_ENV=mainnet`)
-- **Signing:** Viem EIP-712 via `sodex-signer.ts`
-- **Key source:** Wallet-based API keys after deposit — [sodex.com/apikeys](https://sodex.com/apikeys)
-
-Without SoDEX signing credentials, execution still completes the full UI flow and logs to the audit trail using an internal fallback path. The user-facing copy presents this as **SoDEX testnet execution**; audit records retain the underlying `executionMode` for transparency.
-
----
-
-## Risk Scoring Formula
-
-```
-Total Risk =
-  Liquidity Risk     × 0.25
-+ Volatility Risk    × 0.20
-+ Position Size Risk × 0.20
-+ Macro Risk         × 0.15
-+ News Risk          × 0.10
-+ ETF Flow Risk      × 0.05
-+ Narrative Risk     × 0.05
-```
-
-**Verdict bands:**
-
-| Score | Verdict |
+| Route | Purpose |
 |-------|---------|
-| 0–30 | Safe |
-| 31–60 | Watch |
-| 61–80 | Defensive |
-| 81–100 | Critical |
-
-Weights are visible in the Position Detail advanced panel (`Detailed risk analysis`).
-
----
-
-## AI Memo Flow
-
-1. Risk engine computes position breakdown from SoSoValue + SoDEX context
-2. Groq (`llama-3.3-70b-versatile`) generates structured JSON memo
-3. On missing key or error → deterministic template fallback (badge: **Fallback**)
-4. Memo ID and confidence logged to audit trail
+| `/` | Landing — Detect / Explain / Protect |
+| `/judge` | **60-sec automated judge demo** |
+| `/diag` | **API evidence — live vs simulated** |
+| `/desk` | Command Center |
+| `/desk/positions/btc-perp` | Full interactive demo |
+| `/desk/replay` | Audit replay timeline |
+| `/desk/audit` | Decision audit log |
+| `/desk/narrative` | Sector narrative radar |
 
 ---
 
-## Guided Demo Flow (BTC-PERP)
-
-The main demo at `/desk/positions/btc-perp` is a 4-step guided experience:
-
-| Step | Action |
-|------|--------|
-| **1 — Risk Memo** | Read Groq AI memo: verdict, reasons, evidence, recommended action |
-| **2 — Pick Plan** | Select **Reduce 35%** (recommended) — triggers protection simulation |
-| **3 — Impact** | Before/after panel: risk **84 → 43**, liquidation buffer improvement |
-| **4 — Execute** | Preview order → approve checkbox → **Sign & Execute on SoDEX Testnet** |
-
-### Step 4 execution UX
-
-- **Preview Protection** — validates order params, fetches orderbook, estimates slippage
-- **Sign & Execute on SoDEX Testnet** — EIP-712 sign → submit → confirm → audit log
-- Each action shows a **live step-by-step progress panel** before the result animates in
-- Same progress pattern is used across desk loads (portfolio, replay, audit, narrative, API visibility)
-
----
-
-## Quick Start
-
-```bash
-git clone https://github.com/karagozemin/Upside.git
-cd Upside
-npm install
-cp .env.example .env.local
-# Add at minimum: SOSOVALUE_API_KEY and GROQ_API_KEY
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) (Next.js may use port 3001 if 3000 is busy).
-
-Click **Start Demo** on the landing page or go directly to `/desk/positions/btc-perp`.
-
----
-
-## 60-Second Judge Demo Script
-
-1. **Landing** → note hero preview card (Risk 84 → 43) → **Start BTC Demo**
-2. **Step 1** → read AI risk memo (Groq Live or Fallback badge)
-3. **Step 2** → select **Reduce 35%** → watch simulation progress
-4. **Step 3** → confirm before/after risk drop (84 → 43)
-5. **Step 4** → check approval box → **Preview Protection** → **Sign & Execute on SoDEX Testnet**
-6. **Risk Replay** → timeline 62 → 84 → 43
-7. **Audit Log** → verify memo, plan, and execution entries
-8. **API Visibility** (desk) → confirm Live / Fallback per source
-
-### Demo Portfolio
-
-| Position | Verdict | Recommended Action |
-|----------|---------|-------------------|
-| BTC-PERP Long | Critical | Reduce 35% |
-| ETH-PERP Long | Defensive | Hedge 20% |
-| SOL-PERP Short | Watch | Monitor |
-| RWA Basket | Safe | Monitor only |
-
----
-
-## Environment Variables
-
-Copy `.env.example` to `.env.local`:
+## Environment variables
 
 ```env
-# ─── SoSoValue (market intelligence) ─────────────────────────────
-# https://openapi.sosovalue.com
-SOSOVALUE_API_KEY=
+SOSOVALUE_API_KEY=          # openapi.sosovalue.com
+GROQ_API_KEY=               # console.groq.com
+GROQ_MODEL=llama-3.3-70b-versatile
 
-# ─── SoDEX (trading & positions) ─────────────────────────────────
-# NOT the same as SoSoValue. Wallet-based keys after deposit.
-# https://sodex.com/apikeys
 SODEX_ENV=testnet
 SODEX_USER_ADDRESS=
 SODEX_ACCOUNT_ID=
 SODEX_API_KEY_NAME=
-SODEX_API_KEY_PRIVATE_KEY=
+SODEX_API_KEY_PRIVATE_KEY=  # sodex.com/apikeys
 
-# ─── Groq (AI risk memos) ────────────────────────────────────────
-# https://console.groq.com
-GROQ_API_KEY=
-GROQ_MODEL=llama-3.3-70b-versatile
-
-# Force demo/fallback mode even when keys are present
 NEXT_PUBLIC_FORCE_DEMO=false
 ```
 
-### Minimum setup (demo works)
-
-| Variable | Required? | Effect if missing |
-|----------|-----------|-------------------|
-| `SOSOVALUE_API_KEY` | Recommended | News / ETF / indices use demo fallback |
-| `GROQ_API_KEY` | Recommended | AI memo uses template fallback |
-| SoDEX signing fields | Optional | Execution uses internal fallback; orderbook still live |
-
----
-
-## Fallback / Demo Mode
-
-- App **never crashes** when API keys are missing
-- Every data source shows **Live** or **Fallback** in the API Visibility panel
-- Demo data is **never hidden** — judges always see the active data mode
-- `NEXT_PUBLIC_FORCE_DEMO=true` forces fallback even with keys configured
-- SoDEX orderbook is public and works without credentials
-- SoDEX execution without signing keys completes the UI flow and writes to audit (internal `executionMode: simulated`)
+Minimum for demo: `SOSOVALUE_API_KEY` + `GROQ_API_KEY`. App never crashes without keys.
 
 ---
 
 ## Deploy to Vercel
 
 ```bash
-npm run build   # must pass before deploy
+npm run build
 ```
 
-1. Push to GitHub
-2. Import project in [Vercel](https://vercel.com)
-3. Add environment variables (at minimum `SOSOVALUE_API_KEY`, `GROQ_API_KEY`)
-4. Deploy — framework preset: **Next.js**
+Add env vars in Vercel dashboard. Recommended links in submission:
 
-Optional: add SoDEX signing vars for real testnet order submission.
-
----
-
-## Screenshots
-
-Add submission screenshots to `/public/screenshots/`:
-
-| File | Content |
-|------|---------|
-| `landing.png` | Landing hero + risk preview card |
-| `command-center.png` | Desk overview |
-| `position-detail.png` | 4-step BTC demo with before/after |
-| `execute.png` | Step 4 execution progress + result |
-| `api-visibility.png` | Live / Fallback panel |
+```
+Live Demo:  https://your-app.vercel.app/desk/positions/btc-perp
+Judge Mode: https://your-app.vercel.app/judge
+API Evidence: https://your-app.vercel.app/diag
+```
 
 ---
 
-## Tech Stack
+## Wave changelog
 
-| Layer | Technology |
-|-------|-------------|
-| Framework | Next.js 15 (App Router) |
-| Language | TypeScript |
-| Styling | Tailwind CSS v4 |
-| Charts | Recharts |
-| AI | Groq SDK (`llama-3.3-70b-versatile`) |
-| Signing | Viem (EIP-712) |
-| Validation | Zod |
-| Fonts | Syne (display), Inter, JetBrains Mono |
+### Wave 3 — Core risk infrastructure
+- SoSoValue + SoDEX + Groq integrations with fallback
+- Weighted risk engine + protection plan builder
+- 4-step flow: Risk Memo → Protection Plan → Impact Preview → SoDEX Action
+- Audit log + risk replay
 
----
-
-## Submission Checklist
-
-- [x] Next.js App Router + TypeScript + Tailwind v4
-- [x] SoSoValue integration with caching, 429 handling, and fallback
-- [x] SoDEX integration — public orderbook + EIP-712 testnet signing + execution fallback
-- [x] Groq AI risk memos with template fallback
-- [x] Weighted risk scoring engine with visible formula
-- [x] Command Center dashboard
-- [x] Guided 4-step BTC demo (memo → plan → impact → execute)
-- [x] Before/after risk transformation (84 → 43)
-- [x] Narrative Risk Radar
-- [x] Risk Replay timeline
-- [x] Audit Log
-- [x] API Visibility panel (Live / Fallback per source)
-- [x] Landing page — two-column hero, animations, live preview card
-- [x] Operation progress UX on all async actions
-- [x] English UI throughout
-- [x] `npm run build` passes — Vercel-ready
-- [ ] Screenshots in `/public/screenshots/`
-- [ ] Production deploy URL
+### Wave 4 — Judge-ready product
+- `/judge` 60-sec automated demo
+- `/diag` API evidence page
+- Explainable risk factor breakdown with "why" per factor
+- Execution proof panel (order ID, HTTP status, EIP-712, audit hash)
+- Before/after: exposure + estimated loss at −3% move
+- Safety controls + track record outcomes
+- Reduce / Hedge / Close protection options
+- Landing + README restructured for judges
 
 ---
 
-## License
+## Tech stack
 
-MIT — built for the SoSoValue Buildathon.
+Next.js 15 · TypeScript · Tailwind v4 · Groq · SoSoValue OpenAPI · SoDEX Perps · Viem (EIP-712) · Recharts · Zod
 
-*“Build Your One-Person On-Chain Finance Business with SoSoValue.”*
+---
+
+## Limitations / next
+
+- [ ] Production Vercel URL in submission
+- [ ] Real SoDEX testnet order with deposited API keys
+- [ ] Webhook alerts (Telegram/Discord)
+- [ ] Multi-position portfolio hedging
+- [ ] Drawdown backtesting
+
+---
+
+*Built for the SoSoValue Buildathon — "Build Your One-Person On-Chain Finance Business with SoSoValue."*

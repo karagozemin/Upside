@@ -76,16 +76,15 @@ export function generateProtectionOptions(position: Position): ProtectionOption[
         recommended: false,
       },
       {
-        id: "stop-protective",
-        label: "Option C — Stop",
+        id: "close-full",
+        label: "Option C — Close",
         type: "stop",
-        description: "Place protective stop at $59,800 (reduce-only)",
-        stopPrice: 59_800,
-        expectedRiskScore: 52,
-        expectedDrawdownReduction: 9,
-        liquidationDistanceAfter: 9.2,
+        description: "Close full BTC-PERP long position (reduce-only market exit)",
+        expectedRiskScore: 28,
+        expectedDrawdownReduction: 14,
+        liquidationDistanceAfter: 99,
         executionComplexity: "low",
-        tradeoff: "No immediate size reduction but vulnerable to wick-through in high vol",
+        tradeoff: "Eliminates exposure entirely but forfeits upside if BTC reverses",
         recommended: false,
       },
     ];
@@ -198,9 +197,20 @@ export function simulateProtection(
   };
 
   if (position.id === "btc-perp" && option.recommended) {
+    const before = {
+      riskScore: position.riskScore,
+      liquidationDistance: position.liquidationDistance,
+      maxDrawdown: position.maxDrawdown,
+      exposure: position.leverage,
+      estimatedLossAt3Pct: -Math.round(position.sizeUsd * 0.03 * position.leverage / position.leverage),
+    };
     return {
-      before: BTC_PROTECTION_BEFORE,
-      after: BTC_PROTECTION_AFTER,
+      before,
+      after: {
+        ...BTC_PROTECTION_AFTER,
+        riskScore: option.expectedRiskScore,
+        liquidationDistance: option.liquidationDistanceAfter,
+      },
       selectedOption: option,
     };
   }
@@ -213,12 +223,11 @@ export function simulateProtection(
 }
 
 export async function getPortfolioData() {
-  await Promise.all([
-    import("./sosovalue").then((m) => m.getEtfFlow()),
-    import("./sodex").then((m) => m.getOrderbook("BTC-USD")),
-  ]);
-
-  const positions = DEMO_POSITIONS;
+  const { buildLivePositions } = await import("./sodex-account");
+  const { buildMarketContext, fetchLiveMarketSnapshot } = await import("./live-market");
+  const market = await fetchLiveMarketSnapshot("BTC-USD");
+  const ctx = buildMarketContext(market);
+  const { positions } = await buildLivePositions();
   const portfolioRiskScore = Math.round(
     positions.reduce((sum, p) => sum + p.riskScore * p.sizeUsd, 0) /
       positions.reduce((sum, p) => sum + p.sizeUsd, 0)
@@ -234,7 +243,7 @@ export async function getPortfolioData() {
 
   return {
     portfolioRiskScore,
-    marketRegime: "Risk-Off Volatile",
+    marketRegime: ctx.regime,
     positionsAtRisk,
     recommendedActions,
     positions,
@@ -242,11 +251,8 @@ export async function getPortfolioData() {
 }
 
 export async function getPositionDetail(id: string): Promise<PositionDetail | null> {
-  await Promise.all([
-    import("./sosovalue").then((m) => m.getNewsFeed()),
-    import("./sosovalue").then((m) => m.getEtfFlow()),
-    import("./sodex").then((m) => m.getOrderbook("BTC-USD")),
-  ]);
-
+  const { buildLivePositionDetail } = await import("./sodex-account");
+  const live = await buildLivePositionDetail(id);
+  if (live) return live;
   return getDemoPosition(id);
 }

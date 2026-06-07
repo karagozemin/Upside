@@ -49,6 +49,15 @@ export default function DeskPage() {
         <DataModeBadge mode={mode} />
       </div>
 
+      <Link href="/judge" className="block cursor-pointer">
+        <div className="panel panel-glow relative mb-4 overflow-hidden border-[#34d399]/20 p-6 transition hover:scale-[1.01]">
+          <p className="label text-[#34d399]">For judges</p>
+          <h2 className="display mt-1 text-2xl font-bold">60-sec Judge Demo</h2>
+          <p className="mt-1 text-sm text-[#64748b]">Automated: memo → plan → impact → SoDEX → audit</p>
+          <span className="btn btn-primary mt-4 inline-flex text-sm">Start →</span>
+        </div>
+      </Link>
+
       <Link href="/desk/positions/btc-perp" className="block cursor-pointer">
         <div className="panel panel-glow relative overflow-hidden p-8 transition hover:scale-[1.01]">
           <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-[#22d3ee]/10 blur-3xl" />

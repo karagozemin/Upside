@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { OperationProgress, OperationResult } from "@/components/ui/OperationProgress";
 import { runOperation, type OperationStepState } from "@/lib/run-operation";
+import { ExecutionProof } from "@/components/desk/ExecutionProof";
 import type { ExecutionResult, OrderPreview, ProtectionSimulation, RiskMemo } from "@/lib/types";
 import { formatPrice, cn } from "@/lib/utils";
 
@@ -72,8 +73,8 @@ export function ExecutionPreview({ positionId, optionId, memo }: {
   return (
     <div className="panel panel-glow">
       <div className="border-b border-white/5 bg-[#22d3ee]/5 px-6 py-4">
-        <p className="label text-[#22d3ee]">Step 4</p>
-        <p className="text-sm">① Check box → ② Preview → ③ Sign & Execute</p>
+        <p className="label text-[#22d3ee]">SoDEX Action</p>
+        <p className="text-sm">① Approve → ② Preview → ③ Sign & Execute on testnet</p>
       </div>
       <div className="p-6">
         <div className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
@@ -117,12 +118,15 @@ export function ExecutionPreview({ positionId, optionId, memo }: {
         )}
 
         {result && !loading && (
-          <OperationResult
-            className="mt-4"
-            title="Protection Executed on SoDEX Testnet"
-            message={result.message}
-            detail={`Risk ${result.riskScoreBefore} → ${result.riskScoreAfter}`}
-          />
+          <>
+            <OperationResult
+              className="mt-4"
+              title="Protection Executed on SoDEX Testnet"
+              message={result.message}
+              detail={`Risk ${result.riskScoreBefore} → ${result.riskScoreAfter}`}
+            />
+            <ExecutionProof result={result} />
+          </>
         )}
 
         {memo && (

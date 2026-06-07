@@ -19,23 +19,23 @@ export default function LandingPage() {
         <section className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
           <div className="text-left">
             <span className="badge badge-mixed animate-in">AI Risk Desk · SoSoValue Buildathon</span>
-            <h1 className="display animate-in delay-100 mt-6 text-4xl font-extrabold leading-[1.15] tracking-tight sm:text-5xl lg:text-[3.25rem]">
-              Most agents chase alpha.
+            <h1 className="display animate-in delay-100 mt-6 text-4xl font-extrabold leading-[1.15] tracking-tight sm:text-5xl lg:text-[3.1rem]">
+              The AI risk desk
               <br />
               <span className="text-gradient-animated bg-gradient-to-r from-[#22d3ee] via-[#2dd4bf] to-[#34d399] bg-clip-text text-transparent">
-                Upside protects the downside.
+                for SoDEX traders.
               </span>
             </h1>
             <p className="animate-in delay-200 mt-5 max-w-xl text-base leading-relaxed text-[#94a3b8] sm:text-lg">
-              Watches your positions, detects risk early, explains why, and
-              prepares protection actions through SoDEX.
+              Upside detects danger before liquidation, explains risk with SoSoValue intelligence,
+              and protects positions through user-approved SoDEX actions.
             </p>
 
             <ul className="mt-8 space-y-3">
               {[
-                { icon: "◎", text: "Monitor open positions with SoSoValue + SoDEX data", delay: "delay-300" },
-                { icon: "◈", text: "Get an AI memo that explains what is going wrong", delay: "delay-400" },
-                { icon: "↓", text: "Approve reduce-only protection on SoDEX testnet", delay: "delay-500" },
+                { icon: "◎", text: "Detect — live SoSoValue data becomes a position-level risk score", delay: "delay-300" },
+                { icon: "◈", text: "Explain — every alert includes factor breakdown and plain-English memo", delay: "delay-400" },
+                { icon: "↓", text: "Protect — preview hedge, reduce, or close before signing on SoDEX", delay: "delay-500" },
               ].map((item) => (
                 <li key={item.text} className={`animate-in ${item.delay} flex items-start gap-3 text-sm text-[#cbd5e1]`}>
                   <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#22d3ee]/10 text-xs text-[#22d3ee]">
@@ -47,13 +47,16 @@ export default function LandingPage() {
             </ul>
 
             <div className="animate-in delay-600 mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Link href="/desk/positions/btc-perp" className="btn btn-primary px-8 py-3.5 text-base">
-                Start BTC Demo →
+              <Link href="/judge" className="btn btn-primary px-8 py-3.5 text-base">
+                Start 60-sec Judge Demo →
               </Link>
-              <Link href="/desk" className="btn btn-secondary px-6 py-3.5">
-                Open Risk Desk
+              <Link href="/desk/positions/btc-perp" className="btn btn-secondary px-6 py-3.5">
+                Full BTC Demo
               </Link>
             </div>
+            <p className="animate-in delay-700 mt-4 text-xs text-[#64748b]">
+              Not a black-box trading bot. Upside never moves funds without explicit user approval.
+            </p>
           </div>
 
           <HeroPreview />
@@ -61,9 +64,9 @@ export default function LandingPage() {
 
         <section className="mt-32 grid gap-6 md:grid-cols-3">
           {[
-            { n: "01", t: "Monitor", d: "Position and liquidity risk via SoSoValue + SoDEX data" },
-            { n: "02", t: "Understand", d: "AI risk memo explains why a position is becoming dangerous" },
-            { n: "03", t: "Protect", d: "Protection simulation with before/after risk reduction" },
+            { n: "01", t: "Detect", d: "SoSoValue + SoDEX data → weighted risk score with factor breakdown" },
+            { n: "02", t: "Explain", d: "Groq AI memo with evidence — why risk jumped to 84" },
+            { n: "03", t: "Protect", d: "Reduce / hedge / close with before/after impact on SoDEX" },
           ].map((item, i) => (
             <Reveal key={item.n} delay={i * 120}>
               <div className="panel h-full p-6 transition-colors duration-300 hover:border-[#22d3ee]/25">
@@ -87,8 +90,8 @@ export default function LandingPage() {
                 BTC long is at critical risk. Reduce 35% plan cuts risk in half.
               </p>
             </div>
-            <Link href="/desk/positions/btc-perp" className="btn btn-primary shrink-0 px-10 py-4 text-base">
-              Go to Demo →
+            <Link href="/judge" className="btn btn-primary shrink-0 px-10 py-4 text-base">
+              Judge Demo →
             </Link>
           </div>
         </section>
