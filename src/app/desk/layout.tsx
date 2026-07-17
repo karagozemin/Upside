@@ -8,18 +8,21 @@ import { cn } from "@/lib/utils";
 const NAV = [
   { href: "/desk", icon: "◉", label: "Overview", sub: "Command center" },
   { href: "/judge", icon: "▶", label: "Judge Demo", sub: "60 seconds", primary: true },
+  { href: "/desk/monitor", icon: "◐", label: "Live Monitor", sub: "Continuous loop", primary: true },
   { href: "/desk/positions/btc-perp", icon: "⚡", label: "BTC Demo", sub: "Full flow" },
+  { href: "/desk/backtest", icon: "∿", label: "Validation", sub: "Backtest proof" },
   { href: "/diag", icon: "◈", label: "API Evidence", sub: "/diag" },
   { href: "/desk/replay", icon: "↻", label: "Replay", sub: "Timeline" },
   { href: "/desk/audit", icon: "☰", label: "Audit", sub: "Decision log" },
 ];
+
 
 export default function DeskLayout({ children }: { children: React.ReactNode }) {
   const path = usePathname();
 
   return (
     <div className="flex min-h-screen">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[220px] flex-col border-r border-white/5 bg-[#030508]/90 backdrop-blur-xl lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-55 flex-col border-r border-white/5 bg-[#030508]/90 backdrop-blur-xl lg:flex">
         <div className="border-b border-white/5 p-5">
           <Logo size={36} subtitle="Risk Desk" href="/" />
         </div>
@@ -54,7 +57,7 @@ export default function DeskLayout({ children }: { children: React.ReactNode }) 
         </div>
       </aside>
 
-      <div className="flex flex-1 flex-col lg:pl-[220px]">
+      <div className="flex flex-1 flex-col lg:pl-55">
         <header className="glass sticky top-0 z-30 flex items-center justify-between px-4 py-3 lg:px-8">
           <div className="flex items-center gap-3 lg:hidden">
             <Logo size={28} showText={false} href="/" />

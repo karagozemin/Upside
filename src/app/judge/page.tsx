@@ -105,13 +105,45 @@ export default function JudgePage() {
             <p className="font-bold">Demo complete</p>
             <p className="mt-1 text-xs opacity-80">Explore the full interactive flow or inspect API evidence.</p>
           </div>
+
+          <Link
+            href="/desk/monitor"
+            className="block cursor-pointer rounded-2xl border border-[#fb7185]/30 bg-[#fb7185]/5 p-5 transition-all hover:bg-[#fb7185]/10"
+          >
+            <p className="label flex items-center gap-2 text-[#fb7185]">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#fb7185] opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-[#fb7185]" />
+              </span>
+              Not a one-shot demo — watch the loop run →
+            </p>
+            <p className="mt-1 text-sm text-[#f1f5f9]">
+              The <strong>continuous monitoring loop</strong>: observe → detect → alert → intervene →
+              resolve, tick by tick. Risk climbs to 90, a Telegram alert fires, an EIP-712 SoDEX order
+              executes on approval, and risk de-escalates — all replayable from one seed.
+            </p>
+          </Link>
+
+          <Link
+            href="/desk/backtest"
+            className="block cursor-pointer rounded-2xl border border-[#22d3ee]/30 bg-[#22d3ee]/5 p-5 transition-all hover:bg-[#22d3ee]/10"
+          >
+            <p className="label text-[#22d3ee]">Does it actually work? →</p>
+            <p className="mt-1 text-sm text-[#f1f5f9]">
+              See the deterministic backtest: <strong>90% hit-rate on drawdowns</strong>, monotonic
+              calibration, and a protected-capital equity curve — reproducible from any seed.
+            </p>
+          </Link>
+
           <div className="flex flex-wrap gap-3">
             <Link href="/desk/positions/btc-perp" className="btn btn-primary">Full BTC Demo →</Link>
+            <Link href="/desk/backtest" className="btn btn-secondary">Validation / Backtest</Link>
             <Link href="/diag" className="btn btn-secondary">API Evidence /diag</Link>
             <Link href="/desk/audit" className="btn btn-secondary">Audit Replay</Link>
           </div>
         </div>
       )}
+
     </div>
   );
 }
