@@ -100,6 +100,19 @@ export default function LandingPage() {
             </span>
             <span className="badge badge-live badge-dot">live</span>
           </div>
+          {/* overlay copy on the chart */}
+          <div className="pointer-events-none absolute inset-x-0 top-12 z-10 px-6 pt-6 sm:px-8">
+            <p className="mono text-[11px] uppercase tracking-widest text-[#5e6673]">
+              Position health · real-time
+            </p>
+            <h3 className="display mt-2 max-w-sm text-xl font-bold leading-snug text-[#eaecef] sm:text-2xl">
+              Every dip toward liquidation,{" "}
+              <span className="text-[#0ecb81]">caught before it lands.</span>
+            </h3>
+            <p className="mt-2 max-w-xs text-[13px] leading-relaxed text-[#848e9c]">
+              The shield marks where Upside stepped in — hedged, reduced, protected.
+            </p>
+          </div>
           <WaveCanvas className="h-90 w-full sm:h-105" />
         </div>
       </header>

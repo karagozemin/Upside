@@ -199,14 +199,16 @@ export function WaveCanvas({ className }: { className?: string }) {
       ctx.fillStyle = `rgba(${chipColor},0.15)`;
       ctx.strokeStyle = `rgba(${chipColor},0.5)`;
       const cw = ctx.measureText(label).width + 26;
-      roundRect(ctx, 12, 14, cw, 22, 6);
+      const chipX = W - cw - 16;
+      const chipY = 22;
+      roundRect(ctx, chipX, chipY, cw, 22, 6);
       ctx.fill();
       ctx.stroke();
       ctx.fillStyle = `rgba(${chipColor},1)`;
       ctx.beginPath();
-      ctx.arc(24, 25, 3, 0, Math.PI * 2);
+      ctx.arc(chipX + 12, chipY + 11, 3, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillText(label, 32, 28.5);
+      ctx.fillText(label, chipX + 20, chipY + 14.5);
 
       if (!reduced) raf = requestAnimationFrame(draw);
     };
