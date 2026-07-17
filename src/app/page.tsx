@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { WaveCanvas } from "@/components/landing/WaveCanvas";
 import { LiveTicker } from "@/components/landing/LiveTicker";
-import { DarkVeil } from "@/components/landing/DarkVeil";
 
 const PIPELINE = [
   {
@@ -49,16 +48,7 @@ const PROOF = [
 
 export default function LandingPage() {
   return (
-    <div className="relative min-h-screen">
-      {/* full-page shader background */}
-      <div className="pointer-events-none fixed inset-0 z-0">
-        <DarkVeil hueShift={0} speed={1} />
-        {/* readability veil: keep content legible over the shader */}
-        <div className="absolute inset-0 bg-[#0b0e11]/60" />
-        <div className="absolute inset-0 bg-linear-to-b from-transparent via-[#0b0e11]/40 to-[#0b0e11]" />
-      </div>
-
-      <div className="relative z-10">
+    <div className="min-h-screen">
       <nav className="glass sticky top-0 z-50 px-5 py-3">
         <div className="mx-auto flex max-w-5xl items-center justify-between">
           <Logo size={26} href="/" className="[&_p]:text-base" />
@@ -213,7 +203,6 @@ export default function LandingPage() {
           </span>
         </div>
       </footer>
-      </div>
     </div>
   );
 }
