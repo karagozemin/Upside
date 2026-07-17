@@ -139,16 +139,26 @@ async function fetchSoSoValue<T>(
   const start = Date.now();
 
   try {
-    const res = await fetch(init?.url ?? `${BASE_URL}${path}`, {
-      method: init?.method ?? "GET",
-      headers: {
-        "x-soso-api-key": apiKey,
-        Accept: "application/json",
-        ...(init?.body ? { "Content-Type": "application/json" } : {}),
-      },
-      ...(init?.body ? { body: init.body } : {}),
-      cache: "no-store",
-    });
+    const doFetch = () =>
+      fetch(init?.url ?? `${BASE_URL}${path}`, {
+        method: init?.method ?? "GET",
+        headers: {
+          "x-soso-api-key": apiKey,
+          Accept: "application/json",
+          ...(init?.body ? { "Content-Type": "application/json" } : {}),
+        },
+        ...(init?.body ? { body: init.body } : {}),
+        cache: "no-store",
+      });
+
+    let res = await doFetch();
+
+    // Retry on 429 with backoff (serverless instances can burst past local throttle)
+    for (let attempt = 0; res.status === 429 && attempt < 2; attempt++) {
+      await new Promise((r) => setTimeout(r, 1200 * (attempt + 1)));
+      res = await doFetch();
+    }
+
     const latencyMs = Date.now() - start;
 
     if (res.status === 429) {
