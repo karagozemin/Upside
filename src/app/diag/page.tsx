@@ -31,9 +31,15 @@ function Section({ title, sources }: { title: string; sources: DiagReport["sosov
 
 export default function DiagPage() {
   const [diag, setDiag] = useState<DiagReport | null>(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch("/api/diag").then((r) => r.json()).then((j) => setDiag(j.data));
+    let cancelled = false;
+    fetch("/api/diag")
+      .then((r) => r.json())
+      .then((j) => { if (!cancelled) setDiag(j.data); })
+      .catch(() => { if (!cancelled) setError(true); });
+    return () => { cancelled = true; };
   }, []);
 
   return (
@@ -44,6 +50,28 @@ export default function DiagPage() {
       <p className="mt-2 text-sm text-[#767f8d]">
         Live vs simulated data sources — judges see what is real in under 10 seconds.
       </p>
+
+      {!diag && !error && (
+        <div className="mt-16 flex flex-col items-center justify-center gap-4">
+          <div className="h-10 w-10 animate-spin rounded-full border-2 border-white/10 border-t-[#5e9eff]" />
+          <p className="text-sm text-[#848e9c]">Running live API checks…</p>
+          <p className="mono text-[10px] text-[#5e6673]">
+            Pinging SoSoValue · SoDEX · Groq endpoints in real time — takes a few seconds
+          </p>
+        </div>
+      )}
+
+      {error && (
+        <div className="panel mt-16 p-6 text-center">
+          <p className="text-sm text-[#f0b90b]">Diagnostics request failed.</p>
+          <button
+            onClick={() => location.reload()}
+            className="mt-3 cursor-pointer rounded-lg border border-white/10 px-4 py-2 text-xs text-[#5e9eff]"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {diag && (
         <div className="mt-8 space-y-6">
