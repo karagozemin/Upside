@@ -2,6 +2,7 @@ import { DEMO_ETF_FLOW, DEMO_INDICES, DEMO_NEWS } from "./demo-data";
 import { updateApiStatus } from "./api-visibility";
 
 const BASE_URL = "https://openapi.sosovalue.com/openapi/v1";
+const BASE_URL_V2 = "https://openapi.sosovalue.com/openapi/v2";
 const CACHE_TTL_MS = 300_000;
 const MIN_REQUEST_GAP_MS = 900;
 
@@ -55,6 +56,22 @@ export function parseNewsResponse(data: unknown): Array<{ title: string; sentime
 }
 
 export function parseEtfFlowResponse(data: unknown, ticker: string) {
+  // v2 openapi format: { code: 0, data: [{ date, totalNetInflow, totalValueTraded, ... }, ...] } (newest first)
+  const v2 = data as { code?: number; data?: Array<{ date?: string; totalNetInflow?: number; totalValueTraded?: number }> };
+  if (Array.isArray(v2?.data) && v2.data.length && typeof v2.data[0]?.totalNetInflow === "number") {
+    const sorted = [...v2.data].sort((a, b) => (a.date ?? "") < (b.date ?? "") ? 1 : -1);
+    const recent = sorted.slice(0, 3);
+    const net = recent.reduce((sum, d) => sum + (d.totalNetInflow ?? 0), 0);
+    const traded = recent.reduce((sum, d) => sum + (d.totalValueTraded ?? 0), 0);
+    return {
+      ticker,
+      totalNetInflow: net,
+      totalValueTraded: traded,
+      trend: net < 0 ? ("outflow" as const) : net > 0 ? ("inflow" as const) : ("neutral" as const),
+      days: recent.length,
+    };
+  }
+
   const root = data as {
     data?: {
       totalNetInflow?: number;
@@ -92,6 +109,7 @@ async function fetchSoSoValue<T>(
   sourceName: string,
   endpoint: string,
   path: string,
+  init?: { url?: string; method?: string; body?: string },
 ): Promise<{ data: T | null; live: boolean }> {
   const apiKey = getApiKey();
   if (!apiKey || forceDemo()) {
@@ -121,8 +139,14 @@ async function fetchSoSoValue<T>(
   const start = Date.now();
 
   try {
-    const res = await fetch(`${BASE_URL}${path}`, {
-      headers: { "x-soso-api-key": apiKey, Accept: "application/json" },
+    const res = await fetch(init?.url ?? `${BASE_URL}${path}`, {
+      method: init?.method ?? "GET",
+      headers: {
+        "x-soso-api-key": apiKey,
+        Accept: "application/json",
+        ...(init?.body ? { "Content-Type": "application/json" } : {}),
+      },
+      ...(init?.body ? { body: init.body } : {}),
       cache: "no-store",
     });
     const latencyMs = Date.now() - start;
@@ -192,11 +216,16 @@ export async function getNewsFeed() {
 }
 
 export async function getEtfFlow(ticker = "us-btc-spot") {
-  const path = `/etf/${ticker}/inflow-chart`;
+  const path = `/etf/${ticker}/inflow-chart-v2`;
   const { data, live } = await fetchSoSoValue<unknown>(
     "SoSoValue ETF Flow API",
+    "POST /etf/historicalInflowChart",
     path,
-    path,
+    {
+      url: `${BASE_URL_V2}/etf/historicalInflowChart`,
+      method: "POST",
+      body: JSON.stringify({ type: ticker }),
+    },
   );
 
   if (live && data) {

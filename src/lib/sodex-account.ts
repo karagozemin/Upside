@@ -35,6 +35,12 @@ export type SoDexRawPosition = {
   leverage?: string | number;
   liquidationPrice?: string | number;
   unrealizedPnl?: string | number;
+  // Compact field names used by SoDEX account state P[] entries
+  s?: string; // symbol e.g. "BTC-USD"
+  sz?: string | number; // signed size (negative = short)
+  ep?: string | number; // entry price
+  l?: string | number; // leverage
+  ur?: string | number; // unrealized pnl
 };
 
 export async function getAccountState(address?: string) {
@@ -64,12 +70,15 @@ function mapRawPosition(
   market: Awaited<ReturnType<typeof fetchLiveMarketSnapshot>>,
   breakdown: RiskBreakdown,
 ): Position {
-  const symbol = raw.symbolName ?? raw.symbol ?? "BTC-USD";
-  const side = (raw.side?.toLowerCase() === "short" ? "short" : "long") as "long" | "short";
-  const size = Math.abs(parseFloat(String(raw.size ?? "0")));
+  const symbol = raw.symbolName ?? raw.symbol ?? raw.s ?? "BTC-USD";
+  const signedSize = parseFloat(String(raw.size ?? raw.sz ?? "0"));
+  const side = (raw.side?.toLowerCase() === "short" || signedSize < 0 ? "short" : "long") as
+    | "long"
+    | "short";
+  const size = Math.abs(signedSize);
   const currentPrice = parseFloat(String(raw.markPrice ?? orderbookMidPrice(market.orderbook.orderbook)));
-  const entryPrice = parseFloat(String(raw.entryPrice ?? currentPrice));
-  const leverage = parseFloat(String(raw.leverage ?? "5")) || 5;
+  const entryPrice = parseFloat(String(raw.entryPrice ?? raw.ep ?? currentPrice));
+  const leverage = parseFloat(String(raw.leverage ?? raw.l ?? "5")) || 5;
   const liqPrice = parseFloat(String(raw.liquidationPrice ?? "0"));
   const liquidationDistance =
     liqPrice > 0 && currentPrice > 0
@@ -127,7 +136,7 @@ export async function buildLivePositions(): Promise<{
 
   if (rawList.length) {
     const positions = rawList.map((raw) => {
-      const leverage = parseFloat(String(raw.leverage ?? "5")) || 5;
+      const leverage = parseFloat(String(raw.leverage ?? raw.l ?? "5")) || 5;
       const liqDist = 8;
       const breakdown = computeLiveRiskBreakdown(leverage, liqDist, ctx);
       return mapRawPosition(raw, market, breakdown);

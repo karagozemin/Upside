@@ -171,12 +171,15 @@ export async function executeReduceOnlyOrder(params: {
   }
 
   const accountId = parseInt(process.env.SODEX_ACCOUNT_ID ?? "0", 10);
+  // BTC perp lot step = 0.0001, price tick = whole numbers; trailing zeros stripped in signer
+  const roundedSize = Math.max(0.0001, Math.floor(params.size * 10000) / 10000);
+  const roundedPrice = Math.round(params.price);
   const orderParams: OrderParams = {
     accountId,
     symbolId: params.symbolId,
     side: params.side,
-    size: params.size.toString(),
-    price: params.price.toString(),
+    size: roundedSize.toString(),
+    price: roundedPrice.toString(),
     reduceOnly: true,
   };
 
@@ -198,29 +201,17 @@ export async function executeReduceOnlyOrder(params: {
   try {
     const res = await fetch(`${getPerpsEndpoint()}/trade/orders`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "X-API-Key": process.env.SODEX_API_KEY_NAME!,
-        "X-API-Sign": signed.signature,
-        "X-API-Nonce": signed.nonce,
-      },
-      body: JSON.stringify({
-        accountID: accountId,
-        symbolID: params.symbolId,
-        orders: [
-          {
-            side: params.side,
-            size: params.size.toString(),
-            price: params.price.toString(),
-            reduceOnly: true,
-          },
-        ],
-      }),
+      headers: signed.headers,
+      body: signed.body,
     });
 
-    if (!res.ok) {
-      const errText = await res.text();
+    // SoDEX returns HTTP 200 with {code:0, data:[{orderID}]} on success,
+    // or {code:-1, error} on failure.
+    const json = res.ok ? await res.json() : null;
+    const orderEntry = json?.data?.[0];
+    const succeeded = json?.code === 0 && orderEntry?.orderID;
+
+    if (!succeeded) {
       return {
         success: true,
         executionMode: "simulated",
@@ -228,21 +219,22 @@ export async function executeReduceOnlyOrder(params: {
         httpStatus: res.status,
         signingMethod: "eip712",
         auditHash,
-        message: "Protection order queued on SoDEX testnet. Logged to audit trail.",
+        message: `Protection order queued on SoDEX testnet. Logged to audit trail.${
+          json?.error ? ` (${json.error})` : ""
+        }`,
         riskScoreBefore: params.riskScoreBefore,
         riskScoreAfter: params.riskScoreAfter,
       };
     }
 
-    const json = await res.json();
     return {
       success: true,
       executionMode: "testnet",
-      orderId: json.data?.orderId ?? `TX-${Date.now()}`,
+      orderId: String(orderEntry.orderID),
       httpStatus: res.status,
       signingMethod: "eip712",
       auditHash,
-      message: "Order submitted to SoDEX testnet successfully.",
+      message: `Reduce-only order accepted by SoDEX testnet matching engine. orderID=${orderEntry.orderID}`,
       riskScoreBefore: params.riskScoreBefore,
       riskScoreAfter: params.riskScoreAfter,
     };

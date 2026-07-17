@@ -10,7 +10,7 @@ const SOURCES: ApiSourceStatus[] = [
   },
   {
     name: "SoSoValue ETF Flow API",
-    endpoint: "/etf/{ticker}/inflow-chart",
+    endpoint: "POST /v2/etf/historicalInflowChart",
     status: "pending",
     lastFetch: null,
     latencyMs: null,

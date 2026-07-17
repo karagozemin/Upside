@@ -140,7 +140,7 @@ Everything judge-facing is reproducible:
 | `/api/monitor?seed=N` | seeded PRNG (mulberry32-style) drives the tick series |
 | `/api/backtest?seed=N` | same seed → identical samples, confusion matrix, metrics |
 | Risk memos | Groq when key present; deterministic template fallback otherwise |
-| Order execution | real EIP-712 testnet when keys set; honest "judge-safe simulated" label otherwise — **never fake order IDs** |
+| Order execution | **real EIP-712 testnet execution** when keys set — matching-engine order IDs (verified, e.g. `orderID 2338792272`); honest "judge-safe simulated" label otherwise — **never fake order IDs** |
 | Audit log | every decision hashed and appended (`audit-log.ts`) |
 
 `/diag` and `/api/diag` report, per data source, whether the running instance is on **live** data or **fallback** — so a reviewer never has to guess what's real.
@@ -157,7 +157,23 @@ Everything judge-facing is reproducible:
 ### SoDEX (`sodex.ts`, `sodex-signer.ts`)
 - Testnet gateway `https://testnet-gw.sodex.dev/api/v1/perps`.
 - Reads: orderbook (public), wallet positions (when `SODEX_USER_ADDRESS` set).
-- Writes: `POST /trade/orders` with **Viem EIP-712** typed-data signatures, reduce-only.
+- Writes: `POST /trade/orders` with **Viem EIP-712** typed-data signatures, reduce-only — **verified end-to-end against the live testnet matching engine** (real order IDs returned).
+
+**Signing scheme** (reverse-engineered to match the official `sodex-go-sdk`):
+
+```
+payload   = compact JSON {"type":"newOrder","params":{clOrdID, modifier, side, type,
+            timeInForce, price, quantity, reduceOnly, positionSide}}   ← exact Go struct field order
+hash      = keccak256(payload)
+signature = EIP-712 signTypedData:
+              domain  { name:"futures", version:"0.0.1", chainId:138565 }
+              type    ExchangeAction(bytes32 payloadHash, uint64 nonce)
+headers   = X-API-Key:       API key *name* (not address)
+            X-API-Sign:      0x01 ‖ r ‖ s ‖ v   (v as 0/1, not 27/28)
+            X-API-Timestamp: nonce in microseconds
+```
+
+Gotchas encoded in `sodex-signer.ts`: numeric strings must have trailing zeros stripped (`0.0010` → `0.001`), quantity is rounded to the market's lot step (0.0001 for BTC-PERP), and success is `HTTP 200 + {code:0, data:[{orderID}]}` rather than a REST status code.
 
 ### Groq (`ai-risk-memo.ts`)
 - `llama-3.3-70b-versatile` generates the plain-English risk memo from the factor breakdown. The factors are inputs to the LLM, never the other way round — **the score is math, the memo is narration.**

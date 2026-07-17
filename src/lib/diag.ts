@@ -57,7 +57,7 @@ export async function getDiagReport(): Promise<DiagReport> {
     },
     {
       name: "ETF Inflow Chart",
-      endpoint: "GET /etf/us-btc-spot/inflow-chart",
+      endpoint: "POST /v2/etf/historicalInflowChart",
       status: etf.live ? "ok" : "fallback",
       latencyMs: null,
       lastFetch: new Date().toISOString(),
