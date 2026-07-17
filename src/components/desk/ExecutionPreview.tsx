@@ -72,22 +72,22 @@ export function ExecutionPreview({ positionId, optionId, memo }: {
 
   return (
     <div className="panel panel-glow">
-      <div className="border-b border-white/5 bg-[#22d3ee]/5 px-6 py-4">
-        <p className="label text-[#22d3ee]">SoDEX Action</p>
+      <div className="border-b border-white/5 bg-[#5e9eff]/5 px-6 py-4">
+        <p className="label text-[#5e9eff]">SoDEX Action</p>
         <p className="text-sm">① Approve → ② Preview → ③ Sign & Execute on testnet</p>
       </div>
       <div className="p-6">
         <div className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
           {[["Type", preview.orderType], ["Size", preview.size], ["Price", formatPrice(preview.estimatedPrice)], ["Slippage", `${preview.estimatedSlippage}%`]].map(([k,v]) => (
             <div key={k} className="rounded-lg bg-white/5 px-3 py-2">
-              <p className="text-[10px] text-[#64748b]">{k}</p>
+              <p className="text-[10px] text-[#767f8d]">{k}</p>
               <p className="mono text-xs font-medium">{v}</p>
             </div>
           ))}
         </div>
 
         <label className="mt-5 flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
-          <input type="checkbox" checked={confirmed} onChange={(e) => setConfirmed(e.target.checked)} className="h-4 w-4 accent-[#22d3ee]" />
+          <input type="checkbox" checked={confirmed} onChange={(e) => setConfirmed(e.target.checked)} className="h-4 w-4 accent-[#5e9eff]" />
           <span className="text-sm">I approve this protection plan</span>
         </label>
 
@@ -134,7 +134,7 @@ export function ExecutionPreview({ positionId, optionId, memo }: {
             const b = new Blob([JSON.stringify(memo, null, 2)], { type: "application/json" });
             const a = document.createElement("a"); a.href = URL.createObjectURL(b);
             a.download = `memo-${memo.memoId}.json`; a.click();
-          }} className="mt-3 w-full cursor-pointer text-center text-xs text-[#64748b] hover:text-[#f1f5f9]">
+          }} className="mt-3 w-full cursor-pointer text-center text-xs text-[#767f8d] hover:text-[#eaecef]">
             Download memo
           </button>
         )}

@@ -29,8 +29,8 @@ export default function DeskPage() {
   if (loading || !data) {
     return (
       <div className="mx-auto max-w-3xl panel p-8">
-        <p className="label text-[#22d3ee]">Command Center</p>
-        <p className="mt-2 text-sm text-[#64748b]">Initializing risk desk…</p>
+        <p className="label text-[#5e9eff]">Command Center</p>
+        <p className="mt-2 text-sm text-[#767f8d]">Initializing risk desk…</p>
         {operationSteps && <OperationProgress steps={operationSteps} title="Loading portfolio" className="mt-6" />}
       </div>
     );
@@ -44,26 +44,26 @@ export default function DeskPage() {
         <div>
           <p className="label">Command Center</p>
           <h1 className="display mt-1 text-3xl font-bold">Risk Desk</h1>
-          <p className="mt-2 text-sm text-[#64748b]">Click the card below to start the demo</p>
+          <p className="mt-2 text-sm text-[#767f8d]">Click the card below to start the demo</p>
         </div>
         <DataModeBadge mode={mode} />
       </div>
 
       <Link href="/judge" className="block cursor-pointer">
-        <div className="panel panel-glow relative mb-4 overflow-hidden border-[#34d399]/20 p-6 transition hover:scale-[1.01]">
-          <p className="label text-[#34d399]">For judges</p>
+        <div className="panel panel-glow relative mb-4 overflow-hidden border-[#0ecb81]/20 p-6 transition hover:scale-[1.01]">
+          <p className="label text-[#0ecb81]">For judges</p>
           <h2 className="display mt-1 text-2xl font-bold">60-sec Judge Demo</h2>
-          <p className="mt-1 text-sm text-[#64748b]">Automated: memo → plan → impact → SoDEX → audit</p>
+          <p className="mt-1 text-sm text-[#767f8d]">Automated: memo → plan → impact → SoDEX → audit</p>
           <span className="btn btn-primary mt-4 inline-flex text-sm">Start →</span>
         </div>
       </Link>
 
       <Link href="/desk/positions/btc-perp" className="block cursor-pointer">
         <div className="panel panel-glow relative overflow-hidden p-8 transition hover:scale-[1.01]">
-          <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-[#22d3ee]/10 blur-3xl" />
-          <p className="label text-[#22d3ee]">Click to start</p>
+          <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-[#5e9eff]/10 blur-3xl" />
+          <p className="label text-[#5e9eff]">Click to start</p>
           <h2 className="display mt-2 text-3xl font-bold">BTC-PERP Demo</h2>
-          <p className="mt-2 text-[#64748b]">Risk 84 → 43 · Reduce 35% · 4 steps</p>
+          <p className="mt-2 text-[#767f8d]">Risk 84 → 43 · Reduce 35% · 4 steps</p>
           <span className="btn btn-primary mt-6 inline-flex">Start Demo →</span>
         </div>
       </Link>

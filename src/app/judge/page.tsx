@@ -58,15 +58,15 @@ export default function JudgePage() {
 
   return (
     <div className="mx-auto max-w-2xl animate-rise px-4 py-8">
-      <Link href="/" className="cursor-pointer text-xs text-[#22d3ee]">← Home</Link>
+      <Link href="/" className="cursor-pointer text-xs text-[#5e9eff]">← Home</Link>
       <p className="label mt-4">Judge Mode</p>
       <h1 className="display text-3xl font-bold">60-Second Demo</h1>
-      <p className="mt-2 text-sm text-[#64748b]">
-        Most submissions help users find trades. Upside helps users <strong className="text-[#f1f5f9]">survive</strong> trades.
+      <p className="mt-2 text-sm text-[#767f8d]">
+        Most submissions help users find trades. Upside helps users <strong className="text-[#eaecef]">survive</strong> trades.
       </p>
 
       <div className="panel panel-glow mt-8 p-6 text-center">
-        <p className="text-sm text-[#94a3b8]">
+        <p className="text-sm text-[#848e9c]">
           Automated walkthrough: position → SoSoValue data → risk memo → protection plan → impact → SoDEX → audit
         </p>
         <button
@@ -89,35 +89,35 @@ export default function JudgePage() {
             key={card.title}
             className={cn(
               "panel p-4 transition-all duration-500",
-              activeCard >= i && "panel-glow border-[#22d3ee]/20",
+              activeCard >= i && "panel-glow border-[#5e9eff]/20",
               activeCard < i && "opacity-40",
             )}
           >
-            <p className="label text-[#22d3ee]">{card.title}</p>
-            <p className="mt-1 text-sm text-[#94a3b8]">{card.desc}</p>
+            <p className="label text-[#5e9eff]">{card.title}</p>
+            <p className="mt-1 text-sm text-[#848e9c]">{card.desc}</p>
           </div>
         ))}
       </div>
 
       {done && (
         <div className="result-reveal mt-8 space-y-3">
-          <div className="panel border-[#34d399]/30 bg-[#34d399]/10 p-5 text-sm text-[#34d399]">
+          <div className="panel border-[#0ecb81]/30 bg-[#0ecb81]/10 p-5 text-sm text-[#0ecb81]">
             <p className="font-bold">Demo complete</p>
             <p className="mt-1 text-xs opacity-80">Explore the full interactive flow or inspect API evidence.</p>
           </div>
 
           <Link
             href="/desk/monitor"
-            className="block cursor-pointer rounded-2xl border border-[#fb7185]/30 bg-[#fb7185]/5 p-5 transition-all hover:bg-[#fb7185]/10"
+            className="block cursor-pointer rounded-2xl border border-[#f6465d]/30 bg-[#f6465d]/5 p-5 transition-all hover:bg-[#f6465d]/10"
           >
-            <p className="label flex items-center gap-2 text-[#fb7185]">
+            <p className="label flex items-center gap-2 text-[#f6465d]">
               <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#fb7185] opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-[#fb7185]" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#f6465d] opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-[#f6465d]" />
               </span>
               Not a one-shot demo — watch the loop run →
             </p>
-            <p className="mt-1 text-sm text-[#f1f5f9]">
+            <p className="mt-1 text-sm text-[#eaecef]">
               The <strong>continuous monitoring loop</strong>: observe → detect → alert → intervene →
               resolve, tick by tick. Risk climbs to 90, a Telegram alert fires, an EIP-712 SoDEX order
               executes on approval, and risk de-escalates — all replayable from one seed.
@@ -126,10 +126,10 @@ export default function JudgePage() {
 
           <Link
             href="/desk/backtest"
-            className="block cursor-pointer rounded-2xl border border-[#22d3ee]/30 bg-[#22d3ee]/5 p-5 transition-all hover:bg-[#22d3ee]/10"
+            className="block cursor-pointer rounded-2xl border border-[#5e9eff]/30 bg-[#5e9eff]/5 p-5 transition-all hover:bg-[#5e9eff]/10"
           >
-            <p className="label text-[#22d3ee]">Does it actually work? →</p>
-            <p className="mt-1 text-sm text-[#f1f5f9]">
+            <p className="label text-[#5e9eff]">Does it actually work? →</p>
+            <p className="mt-1 text-sm text-[#eaecef]">
               See the deterministic backtest: <strong>90% hit-rate on drawdowns</strong>, monotonic
               calibration, and a protected-capital equity curve — reproducible from any seed.
             </p>

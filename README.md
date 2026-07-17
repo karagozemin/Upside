@@ -205,7 +205,7 @@ Each factor shows **score + why** in the Explainable Risk Engine panel (Step 1).
 ## Architecture
 
 ```
-Landing · Judge Mode (/judge) · Diag (/diag)
+Landing (live engine sim) · Judge Mode (/judge) · Diag (/diag)
           ↓
 Live Monitor (/desk/monitor) ── continuous loop ──┐
           ↓                                        │
@@ -219,13 +219,15 @@ Libs → monitoring.ts · risk-engine.ts · risk-factors.ts
 SoSoValue OpenAPI · SoDEX Perps · Groq AI · Telegram
 ```
 
+**→ Full technical deep-dive with diagrams: [ARCHITECTURE.md](./ARCHITECTURE.md)** — layer map, risk-engine internals, monitoring state machine, determinism guarantees, integration resilience.
+
 ---
 
 ## Pages
 
 | Route | Purpose |
 |-------|---------|
-| `/` | Landing — Detect / Explain / Protect |
+| `/` | Landing — flat terminal-style product page: live risk-engine simulation (real backtest data), Watch → Warn → Act pipeline |
 | `/judge` | **60-sec automated judge demo** |
 | `/desk/monitor` | **★ Continuous monitoring loop + Telegram alerts + auto-intervention** |
 | `/desk/backtest` | **Deterministic backtest — hit-rate, precision, drawdown avoided** |

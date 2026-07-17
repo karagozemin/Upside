@@ -15,9 +15,9 @@ export function PositionsTable({ positions }: { positions: Position[] }) {
           <div className="panel panel-glow overflow-hidden transition-transform group-hover:scale-[1.01]">
             <div className="flex flex-wrap items-center justify-between gap-4 p-6">
               <div>
-                <p className="label text-[#fb7185]">Start demo here — click</p>
+                <p className="label text-[#f6465d]">Start demo here — click</p>
                 <h3 className="display mt-1 text-2xl font-bold">{btc.asset} Long</h3>
-                <p className="mt-1 text-sm text-[#64748b]">Risk {btc.riskScore} · {btc.recommendedAction}</p>
+                <p className="mt-1 text-sm text-[#767f8d]">Risk {btc.riskScore} · {btc.recommendedAction}</p>
               </div>
               <div className="flex items-center gap-4">
                 <RiskBadge verdict={btc.verdict} pulse />
@@ -38,12 +38,12 @@ export function PositionsTable({ positions }: { positions: Position[] }) {
               className="flex cursor-pointer items-center justify-between px-5 py-4 transition hover:bg-white/[0.03]">
               <div>
                 <span className="font-medium">{pos.asset}</span>
-                <span className="ml-2 text-xs capitalize text-[#64748b]">{pos.side}</span>
-                <p className="mono mt-0.5 text-xs text-[#64748b]">{formatPrice(pos.currentPrice)} · {pos.riskScore}/100</p>
+                <span className="ml-2 text-xs capitalize text-[#767f8d]">{pos.side}</span>
+                <p className="mono mt-0.5 text-xs text-[#767f8d]">{formatPrice(pos.currentPrice)} · {pos.riskScore}/100</p>
               </div>
               <div className="flex items-center gap-3">
                 <RiskBadge verdict={pos.verdict} />
-                <span className={cn("text-sm", pos.id === "btc-perp" ? "text-[#22d3ee]" : "text-[#64748b]")}>→</span>
+                <span className={cn("text-sm", pos.id === "btc-perp" ? "text-[#5e9eff]" : "text-[#767f8d]")}>→</span>
               </div>
             </Link>
           ))}

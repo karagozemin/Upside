@@ -94,7 +94,7 @@ export default function PositionPage({ params }: { params: Promise<{ id: string 
   if (loading || !data) {
     return (
       <div className="mx-auto max-w-2xl panel p-8">
-        <p className="label text-[#22d3ee]">Loading position desk</p>
+        <p className="label text-[#5e9eff]">Loading position desk</p>
         {operationSteps && <OperationProgress steps={operationSteps} title="Preparing risk analysis" className="mt-4" />}
       </div>
     );
@@ -107,7 +107,7 @@ export default function PositionPage({ params }: { params: Promise<{ id: string 
 
   return (
     <div className="mx-auto max-w-2xl animate-rise">
-      <Link href="/desk" className="cursor-pointer text-xs text-[#22d3ee] hover:underline">← Overview</Link>
+      <Link href="/desk" className="cursor-pointer text-xs text-[#5e9eff] hover:underline">← Overview</Link>
 
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <h1 className="display text-3xl font-bold">{position.asset}</h1>
@@ -118,7 +118,7 @@ export default function PositionPage({ params }: { params: Promise<{ id: string 
       <div className="mt-4 grid grid-cols-4 gap-2">
         {[["Price", formatPrice(position.currentPrice)], ["Lev", `${position.leverage}x`], ["Liq", `${position.liquidationDistance}%`], ["Risk", `${position.riskScore}`]].map(([l,v]) => (
           <div key={l} className="rounded-xl border border-white/5 bg-white/[0.03] px-3 py-2 text-center">
-            <p className="text-[10px] text-[#64748b]">{l}</p>
+            <p className="text-[10px] text-[#767f8d]">{l}</p>
             <p className="mono text-sm font-bold">{v}</p>
           </div>
         ))}
@@ -127,8 +127,8 @@ export default function PositionPage({ params }: { params: Promise<{ id: string 
       <div className="mt-8 flex gap-2 overflow-x-auto pb-2">
         {STEPS.map((s) => (
           <button key={s.id} type="button" onClick={() => document.getElementById(s.id)?.scrollIntoView({ behavior: "smooth" })}
-            className="shrink-0 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-left hover:border-[#22d3ee]/30">
-            <p className="mono text-[10px] text-[#22d3ee]">Step {s.n}</p>
+            className="shrink-0 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-left hover:border-[#5e9eff]/30">
+            <p className="mono text-[10px] text-[#5e9eff]">Step {s.n}</p>
             <p className="text-xs font-semibold">{s.title}</p>
           </button>
         ))}
@@ -180,7 +180,7 @@ export default function PositionPage({ params }: { params: Promise<{ id: string 
 
         <div className="panel p-5">
           <p className="font-semibold">Audit Replay</p>
-          <p className="mt-1 text-xs text-[#64748b]">Verify the same inputs produce the same risk score and recommendation.</p>
+          <p className="mt-1 text-xs text-[#767f8d]">Verify the same inputs produce the same risk score and recommendation.</p>
           <div className="mt-3 flex flex-wrap gap-3">
             <Link href="/desk/replay" className="btn btn-primary">Audit Replay →</Link>
             <Link href="/desk/audit" className="btn btn-secondary">Audit Log</Link>
@@ -188,13 +188,13 @@ export default function PositionPage({ params }: { params: Promise<{ id: string 
           </div>
         </div>
 
-        <button type="button" onClick={() => setShowAdvanced(!showAdvanced)} className="w-full cursor-pointer text-center text-xs text-[#64748b] hover:text-[#f1f5f9]">
+        <button type="button" onClick={() => setShowAdvanced(!showAdvanced)} className="w-full cursor-pointer text-center text-xs text-[#767f8d] hover:text-[#eaecef]">
           {showAdvanced ? "Hide details" : "Detailed risk analysis (for judges)"}
         </button>
         {showAdvanced && (
           <div className="panel space-y-4 p-6">
             <RiskBreakdownChart breakdown={position.breakdown} />
-            <p className="mono text-xs text-[#64748b]">{position.marketContext.narrativeNote}</p>
+            <p className="mono text-xs text-[#767f8d]">{position.marketContext.narrativeNote}</p>
             <table className="w-full text-xs">
               <tbody>
                 {Object.entries(RISK_WEIGHTS).map(([k, w]) => (

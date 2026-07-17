@@ -12,15 +12,15 @@ const CONTROLS = [
 export function SafetyControls() {
   return (
     <div className="panel p-5">
-      <p className="label text-[#22d3ee]">Safety controls</p>
-      <p className="mt-1 text-sm text-[#94a3b8]">
+      <p className="label text-[#5e9eff]">Safety controls</p>
+      <p className="mt-1 text-sm text-[#848e9c]">
         Upside is a risk copilot, not a black-box trading bot. Every protection action is user-approved, signed by the wallet, and auditable.
       </p>
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         {CONTROLS.map((c) => (
           <div key={c.rule} className="rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2">
             <p className="text-xs font-semibold">{c.rule}</p>
-            <p className="mt-0.5 text-[10px] text-[#64748b]">{c.detail}</p>
+            <p className="mt-0.5 text-[10px] text-[#767f8d]">{c.detail}</p>
           </div>
         ))}
       </div>

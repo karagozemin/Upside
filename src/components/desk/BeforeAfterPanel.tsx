@@ -8,20 +8,20 @@ function Metric({ label, before, after, suffix = "", lowerIsBetter = false, form
   const improved = lowerIsBetter ? after < before : after > before;
   const fmt = format ?? ((n: number) => `${n}${suffix}`);
   return (
-    <div className="rounded-xl border border-white/5 bg-[#030508]/60 p-5">
+    <div className="rounded-xl border border-white/5 bg-[#0b0e11]/60 p-5">
       <p className="label">{label}</p>
       <div className="mt-4 flex items-end justify-between">
         <div>
-          <p className="text-[10px] text-[#64748b]">Before</p>
-          <p className="mono text-2xl font-bold text-[#fb7185]">{fmt(before)}</p>
+          <p className="text-[10px] text-[#767f8d]">Before</p>
+          <p className="mono text-2xl font-bold text-[#f6465d]">{fmt(before)}</p>
         </div>
-        <span className="text-[#475569]">→</span>
+        <span className="text-[#5e6673]">→</span>
         <div className="text-right">
-          <p className="text-[10px] text-[#64748b]">After</p>
-          <p className="mono text-2xl font-bold text-[#34d399]">{fmt(after)}</p>
+          <p className="text-[10px] text-[#767f8d]">After</p>
+          <p className="mono text-2xl font-bold text-[#0ecb81]">{fmt(after)}</p>
         </div>
       </div>
-      <p className={`mt-3 text-xs font-medium ${improved ? "text-[#34d399]" : "text-[#fb7185]"}`}>
+      <p className={`mt-3 text-xs font-medium ${improved ? "text-[#0ecb81]" : "text-[#f6465d]"}`}>
         {improved ? "Improved" : "Changed"}
       </p>
     </div>
@@ -31,8 +31,8 @@ function Metric({ label, before, after, suffix = "", lowerIsBetter = false, form
 export function BeforeAfterPanel({ before, after }: { before: BeforeAfterMetrics; after: BeforeAfterMetrics }) {
   return (
     <div className="panel panel-glow overflow-hidden">
-      <div className="border-b border-white/5 bg-[#22d3ee]/5 px-6 py-5">
-        <p className="label text-[#22d3ee]">Impact Preview</p>
+      <div className="border-b border-white/5 bg-[#5e9eff]/5 px-6 py-5">
+        <p className="label text-[#5e9eff]">Impact Preview</p>
         <h3 className="display mt-1 text-2xl font-bold">Before Upside → After Protection</h3>
       </div>
       <div className="grid gap-4 p-6 md:grid-cols-2 lg:grid-cols-3">
@@ -52,8 +52,8 @@ export function BeforeAfterPanel({ before, after }: { before: BeforeAfterMetrics
           />
         )}
       </div>
-      <div className="border-t border-white/5 bg-[#030508]/80 px-6 py-3">
-        <p className="mono text-center text-xs text-[#64748b]">
+      <div className="border-t border-white/5 bg-[#0b0e11]/80 px-6 py-3">
+        <p className="mono text-center text-xs text-[#767f8d]">
           Risk {before.riskScore} → {after.riskScore} · Liq {before.liquidationDistance}% → {after.liquidationDistance}%
           {before.exposure != null && ` · Exposure ${before.exposure}x → ${after.exposure}x`}
         </p>

@@ -27,7 +27,7 @@ export function ApiVisibilityPanel({ compact }: { compact?: boolean }) {
     const live = sources.filter((s) => s.status === "live").length;
     return (
       <div className="panel flex items-center justify-between p-4">
-        <span className="text-sm text-[#64748b]">{loading ? "Checking…" : `${live}/${sources.length} live`}</span>
+        <span className="text-sm text-[#767f8d]">{loading ? "Checking…" : `${live}/${sources.length} live`}</span>
         <DataModeBadge mode={mode} />
       </div>
     );
@@ -52,12 +52,12 @@ export function ApiVisibilityPanel({ compact }: { compact?: boolean }) {
           <div key={s.name} className="flex items-center justify-between px-5 py-3 text-sm">
             <div>
               <p className="font-medium">{s.name}</p>
-              <p className="mono text-[10px] text-[#64748b]">{s.endpoint}</p>
+              <p className="mono text-[10px] text-[#767f8d]">{s.endpoint}</p>
             </div>
             <div className="text-right">
               <span className={cn("badge", s.status === "live" ? "badge-live" : "badge-demo")}>{s.status}</span>
-              {s.latencyMs != null && <p className="mono mt-1 text-[10px] text-[#64748b]">{s.latencyMs}ms</p>}
-              {s.error && <p className="mt-1 text-[10px] text-[#fb7185]">{s.error}</p>}
+              {s.latencyMs != null && <p className="mono mt-1 text-[10px] text-[#767f8d]">{s.latencyMs}ms</p>}
+              {s.error && <p className="mt-1 text-[10px] text-[#f6465d]">{s.error}</p>}
             </div>
           </div>
         ))}

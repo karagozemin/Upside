@@ -5,23 +5,23 @@ import { useEffect, useRef, useState } from "react";
 import type { MonitorSession, MonitorTick, TickEventType } from "@/lib/monitoring";
 
 const EVENT_STYLE: Record<TickEventType, { color: string; ring: string; label: string }> = {
-  observe: { color: "#64748b", ring: "ring-white/10", label: "OBSERVE" },
-  risk_rising: { color: "#fbbf24", ring: "ring-[#fbbf24]/30", label: "RISK RISING" },
-  alert: { color: "#fb7185", ring: "ring-[#fb7185]/40", label: "ALERT" },
+  observe: { color: "#767f8d", ring: "ring-white/10", label: "OBSERVE" },
+  risk_rising: { color: "#f0b90b", ring: "ring-[#f0b90b]/30", label: "RISK RISING" },
+  alert: { color: "#f6465d", ring: "ring-[#f6465d]/40", label: "ALERT" },
   intervention_proposed: { color: "#f97316", ring: "ring-[#f97316]/40", label: "PROPOSED" },
   awaiting_approval: { color: "#f97316", ring: "ring-[#f97316]/30", label: "AWAITING" },
-  executed: { color: "#22d3ee", ring: "ring-[#22d3ee]/40", label: "EXECUTED" },
-  resolved: { color: "#34d399", ring: "ring-[#34d399]/40", label: "RESOLVED" },
+  executed: { color: "#5e9eff", ring: "ring-[#5e9eff]/40", label: "EXECUTED" },
+  resolved: { color: "#0ecb81", ring: "ring-[#0ecb81]/40", label: "RESOLVED" },
 };
 
 function verdictColor(v: string): string {
   return v === "critical"
-    ? "#fb7185"
+    ? "#f6465d"
     : v === "defensive"
       ? "#f97316"
       : v === "watch"
-        ? "#fbbf24"
-        : "#34d399";
+        ? "#f0b90b"
+        : "#0ecb81";
 }
 
 export default function MonitorPage() {
@@ -54,7 +54,7 @@ export default function MonitorPage() {
   }, [session, playing, cursor, speed]);
 
   if (!session) {
-    return <p className="mt-10 animate-pulse text-sm text-[#64748b]">Booting monitor…</p>;
+    return <p className="mt-10 animate-pulse text-sm text-[#767f8d]">Booting monitor…</p>;
   }
 
   const shown = session.ticks.slice(0, cursor + 1);
@@ -68,22 +68,22 @@ export default function MonitorPage() {
 
   return (
     <div className="mx-auto max-w-6xl animate-rise">
-      <Link href="/desk" className="cursor-pointer text-xs text-[#22d3ee]">
+      <Link href="/desk" className="cursor-pointer text-xs text-[#5e9eff]">
         ← Back to Overview
       </Link>
       <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="label flex items-center gap-2">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#34d399] opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#34d399]" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#0ecb81] opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#0ecb81]" />
             </span>
             Live Monitoring Loop
           </p>
           <h1 className="display text-3xl font-bold">
             Continuous risk supervision — {session.asset}
           </h1>
-          <p className="mt-2 max-w-2xl text-sm text-[#64748b]">
+          <p className="mt-2 max-w-2xl text-sm text-[#767f8d]">
             One position, watched every {session.intervalSeconds}s. The system observes → detects a
             rising risk factor → fires a Telegram alert → proposes an intervention → executes a
             signed SoDEX order on approval → and keeps watching. Deterministic and replayable.
@@ -105,8 +105,8 @@ export default function MonitorPage() {
               onClick={() => setSpeed(s)}
               className={`cursor-pointer rounded-lg px-2.5 py-2 text-xs transition-all ${
                 speed === s
-                  ? "bg-[#22d3ee]/15 text-[#22d3ee] ring-1 ring-[#22d3ee]/40"
-                  : "bg-white/5 text-[#64748b] hover:text-[#f1f5f9]"
+                  ? "bg-[#5e9eff]/15 text-[#5e9eff] ring-1 ring-[#5e9eff]/40"
+                  : "bg-white/5 text-[#767f8d] hover:text-[#eaecef]"
               }`}
             >
               {s}×
@@ -126,23 +126,23 @@ export default function MonitorPage() {
               {es.label}
             </span>
             <div>
-              <p className="text-sm font-semibold text-[#f1f5f9]">{current.headline}</p>
-              <p className="text-xs text-[#64748b]">{current.detail}</p>
+              <p className="text-sm font-semibold text-[#eaecef]">{current.headline}</p>
+              <p className="text-xs text-[#767f8d]">{current.detail}</p>
             </div>
           </div>
           <div className="flex items-center gap-6">
             <div className="text-right">
-              <p className="text-[10px] uppercase text-[#64748b]">Clock</p>
-              <p className="font-mono text-sm text-[#94a3b8]">{current.clock}</p>
+              <p className="text-[10px] uppercase text-[#767f8d]">Clock</p>
+              <p className="font-mono text-sm text-[#848e9c]">{current.clock}</p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] uppercase text-[#64748b]">Price</p>
-              <p className="font-mono text-sm text-[#94a3b8]">
+              <p className="text-[10px] uppercase text-[#767f8d]">Price</p>
+              <p className="font-mono text-sm text-[#848e9c]">
                 ${current.price.toLocaleString()}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] uppercase text-[#64748b]">Risk</p>
+              <p className="text-[10px] uppercase text-[#767f8d]">Risk</p>
               <p
                 className="font-mono text-2xl font-bold"
                 style={{ color: verdictColor(current.verdict) }}
@@ -163,7 +163,7 @@ export default function MonitorPage() {
           <section className="glass rounded-2xl p-6">
             <div className="flex items-baseline justify-between">
               <h2 className="text-lg font-semibold">Risk over time</h2>
-              <span className="text-xs text-[#64748b]">
+              <span className="text-xs text-[#767f8d]">
                 peak {session.peakRisk} · now {current.riskScore}
               </span>
             </div>
@@ -172,7 +172,7 @@ export default function MonitorPage() {
 
           <section className="glass rounded-2xl p-6">
             <h2 className="text-lg font-semibold">Why — live factor breakdown</h2>
-            <p className="mt-1 text-xs text-[#64748b]">
+            <p className="mt-1 text-xs text-[#767f8d]">
               Deterministic decision trail: source → raw value → normalized → weight → contribution.
               The score is the sum of the bars; nothing is a black box.
             </p>
@@ -182,22 +182,22 @@ export default function MonitorPage() {
                 .map((f) => (
                   <div key={f.id} className="flex items-center gap-3">
                     <div className="w-36 shrink-0">
-                      <p className="text-xs font-medium text-[#f1f5f9]">{f.label}</p>
-                      <p className="text-[10px] text-[#475569]">{f.source}</p>
+                      <p className="text-xs font-medium text-[#eaecef]">{f.label}</p>
+                      <p className="text-[10px] text-[#5e6673]">{f.source}</p>
                     </div>
                     <div className="h-6 flex-1 overflow-hidden rounded bg-white/5">
                       <div
-                        className="flex h-full items-center rounded bg-linear-to-r from-[#22d3ee]/70 to-[#fb7185]/70 px-2 transition-all duration-500"
+                        className="flex h-full items-center rounded bg-linear-to-r from-[#5e9eff]/70 to-[#f6465d]/70 px-2 transition-all duration-500"
                         style={{ width: `${Math.max(4, f.normalized)}%` }}
                       >
-                        <span className="text-[10px] text-[#030508]">{f.raw}</span>
+                        <span className="text-[10px] text-[#0b0e11]">{f.raw}</span>
                       </div>
                     </div>
                     <div className="w-24 shrink-0 text-right">
-                      <span className="font-mono text-xs text-[#94a3b8]">
+                      <span className="font-mono text-xs text-[#848e9c]">
                         {f.normalized}×{f.weight}
                       </span>
-                      <span className="ml-1 font-mono text-xs font-bold text-[#f1f5f9]">
+                      <span className="ml-1 font-mono text-xs font-bold text-[#eaecef]">
                         ={f.contribution}
                       </span>
                     </div>
@@ -212,24 +212,24 @@ export default function MonitorPage() {
           {/* Telegram alert card */}
           <section
             className={`glass rounded-2xl p-5 transition-all ${
-              firedAlert ? "ring-1 ring-[#fb7185]/40" : "opacity-40"
+              firedAlert ? "ring-1 ring-[#f6465d]/40" : "opacity-40"
             }`}
           >
             <div className="flex items-center gap-2">
               <span className="text-base">✈</span>
               <h3 className="text-sm font-semibold">Telegram Alert</h3>
               {firedAlert && (
-                <span className="ml-auto rounded bg-[#fb7185]/15 px-2 py-0.5 text-[10px] font-bold text-[#fb7185]">
+                <span className="ml-auto rounded bg-[#f6465d]/15 px-2 py-0.5 text-[10px] font-bold text-[#f6465d]">
                   SENT · {firedAlert.clock}
                 </span>
               )}
             </div>
             {firedAlert ? (
-              <div className="mt-3 rounded-xl bg-[#030508]/60 p-3">
-                <p className="text-xs leading-relaxed text-[#cbd5e1]">{firedAlert.message}</p>
+              <div className="mt-3 rounded-xl bg-[#0b0e11]/60 p-3">
+                <p className="text-xs leading-relaxed text-[#c8cdd4]">{firedAlert.message}</p>
               </div>
             ) : (
-              <p className="mt-3 text-xs text-[#475569]">
+              <p className="mt-3 text-xs text-[#5e6673]">
                 No alert yet — risk below threshold (≥60).
               </p>
             )}
@@ -238,14 +238,14 @@ export default function MonitorPage() {
           {/* Intervention card */}
           <section
             className={`glass rounded-2xl p-5 transition-all ${
-              intervention ? "ring-1 ring-[#22d3ee]/40" : "opacity-40"
+              intervention ? "ring-1 ring-[#5e9eff]/40" : "opacity-40"
             }`}
           >
             <div className="flex items-center gap-2">
               <span className="text-base">⚡</span>
               <h3 className="text-sm font-semibold">SoDEX Intervention</h3>
               {intervention && (
-                <span className="ml-auto rounded bg-[#34d399]/15 px-2 py-0.5 text-[10px] font-bold text-[#34d399]">
+                <span className="ml-auto rounded bg-[#0ecb81]/15 px-2 py-0.5 text-[10px] font-bold text-[#0ecb81]">
                   {intervention.status.toUpperCase()}
                 </span>
               )}
@@ -255,21 +255,21 @@ export default function MonitorPage() {
                 <Row k="Action" v={intervention.action} />
                 <Row k="Signing" v="EIP-712 signed payload" />
                 <Row k="Order ID" v={intervention.orderId} mono />
-                <div className="flex items-center justify-between rounded-lg bg-[#030508]/60 p-3">
-                  <span className="text-[#64748b]">Risk before → after</span>
+                <div className="flex items-center justify-between rounded-lg bg-[#0b0e11]/60 p-3">
+                  <span className="text-[#767f8d]">Risk before → after</span>
                   <span className="font-mono font-bold">
-                    <span className="text-[#fb7185]">{intervention.riskBefore}</span>
-                    <span className="mx-1 text-[#64748b]">→</span>
-                    <span className="text-[#34d399]">{intervention.riskAfter}</span>
+                    <span className="text-[#f6465d]">{intervention.riskBefore}</span>
+                    <span className="mx-1 text-[#767f8d]">→</span>
+                    <span className="text-[#0ecb81]">{intervention.riskAfter}</span>
                   </span>
                 </div>
-                <p className="text-[10px] text-[#475569]">
+                <p className="text-[10px] text-[#5e6673]">
                   Executed only after user approval (policy gate). The loop resumes monitoring
                   immediately after fill.
                 </p>
               </div>
             ) : (
-              <p className="mt-3 text-xs text-[#475569]">
+              <p className="mt-3 text-xs text-[#5e6673]">
                 No intervention yet — awaiting action threshold (≥78) and user approval.
               </p>
             )}
@@ -283,12 +283,12 @@ export default function MonitorPage() {
                 const s = EVENT_STYLE[t.event];
                 return (
                   <div key={t.index} className="flex items-start gap-2 text-xs">
-                    <span className="mt-0.5 font-mono text-[10px] text-[#475569]">{t.clock}</span>
+                    <span className="mt-0.5 font-mono text-[10px] text-[#5e6673]">{t.clock}</span>
                     <span
                       className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full"
                       style={{ background: s.color }}
                     />
-                    <span className="text-[#94a3b8]">{t.headline}</span>
+                    <span className="text-[#848e9c]">{t.headline}</span>
                   </div>
                 );
               })}
@@ -310,9 +310,9 @@ export default function MonitorPage() {
             />
             <Outcome label="Alerts · interventions" value={`${session.alerts.length} · 1`} tone="neutral" />
           </div>
-          <p className="mt-4 text-xs text-[#475569]">
+          <p className="mt-4 text-xs text-[#5e6673]">
             Full closed loop completed. Reproduce exactly:{" "}
-            <code className="text-[#64748b]">GET /api/monitor?seed={session.seed}</code>
+            <code className="text-[#767f8d]">GET /api/monitor?seed={session.seed}</code>
           </p>
         </div>
       )}
@@ -323,8 +323,8 @@ export default function MonitorPage() {
 function Row({ k, v, mono }: { k: string; v: string; mono?: boolean }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-[#64748b]">{k}</span>
-      <span className={`text-[#cbd5e1] ${mono ? "font-mono" : ""}`}>{v}</span>
+      <span className="text-[#767f8d]">{k}</span>
+      <span className={`text-[#c8cdd4] ${mono ? "font-mono" : ""}`}>{v}</span>
     </div>
   );
 }
@@ -338,10 +338,10 @@ function Outcome({
   value: string;
   tone: "good" | "warn" | "neutral";
 }) {
-  const color = tone === "good" ? "text-[#34d399]" : tone === "warn" ? "text-[#fbbf24]" : "text-[#f1f5f9]";
+  const color = tone === "good" ? "text-[#0ecb81]" : tone === "warn" ? "text-[#f0b90b]" : "text-[#eaecef]";
   return (
     <div>
-      <p className="text-[11px] uppercase tracking-wide text-[#64748b]">{label}</p>
+      <p className="text-[11px] uppercase tracking-wide text-[#767f8d]">{label}</p>
       <p className={`mt-1 text-2xl font-bold ${color}`}>{value}</p>
     </div>
   );
@@ -371,10 +371,10 @@ function RiskChart({
   const last = ticks[ticks.length - 1];
 
   return (
-    <div className="mt-4 overflow-hidden rounded-xl bg-[#030508]/60 p-2">
+    <div className="mt-4 overflow-hidden rounded-xl bg-[#0b0e11]/60 p-2">
       <svg viewBox={`0 0 ${W} ${H}`} className="h-52 w-full" preserveAspectRatio="none">
         {/* threshold lines */}
-        <line x1="0" y1={y(60)} x2={W} y2={y(60)} stroke="#fb7185" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
+        <line x1="0" y1={y(60)} x2={W} y2={y(60)} stroke="#f6465d" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
         <line x1="0" y1={y(78)} x2={W} y2={y(78)} stroke="#f97316" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
         {/* intervention marker */}
         {intervention && intervention.executedAtTick <= last.index && (
@@ -383,7 +383,7 @@ function RiskChart({
             y1="0"
             x2={x(intervention.executedAtTick)}
             y2={H}
-            stroke="#22d3ee"
+            stroke="#5e9eff"
             strokeWidth="1.5"
             opacity="0.6"
           />
@@ -391,7 +391,7 @@ function RiskChart({
         <path d={path} fill="none" stroke={verdictColor(last.verdict)} strokeWidth="2.5" />
         <circle cx={x(last.index)} cy={y(last.riskScore)} r="4" fill={verdictColor(last.verdict)} />
       </svg>
-      <div className="flex justify-between px-1 text-[10px] text-[#475569]">
+      <div className="flex justify-between px-1 text-[10px] text-[#5e6673]">
         <span>alert ≥60 · action ≥78</span>
         <span>{intervention ? "│ = SoDEX intervention" : ""}</span>
       </div>

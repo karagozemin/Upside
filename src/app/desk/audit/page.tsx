@@ -20,10 +20,10 @@ export default function AuditPage() {
 
   return (
     <div className="mx-auto max-w-4xl animate-rise">
-      <Link href="/desk/positions/btc-perp" className="cursor-pointer text-xs text-[#22d3ee]">← Back to Demo</Link>
+      <Link href="/desk/positions/btc-perp" className="cursor-pointer text-xs text-[#5e9eff]">← Back to Demo</Link>
       <p className="label mt-4">Audit Log</p>
       <h1 className="display text-3xl font-bold">Decision Trail</h1>
-      <p className="mt-2 text-sm text-[#64748b]">Every risk decision logged transparently</p>
+      <p className="mt-2 text-sm text-[#767f8d]">Every risk decision logged transparently</p>
 
       {loading && operationSteps && (
         <OperationProgress steps={operationSteps} title="Loading audit trail" className="mt-8" />

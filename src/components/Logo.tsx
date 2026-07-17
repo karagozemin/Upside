@@ -30,7 +30,7 @@ export function Logo({
       {showText && (
         <div>
           <p className="display text-base font-bold leading-tight tracking-tight">Upside</p>
-          {subtitle && <p className="text-[10px] text-[#64748b]">{subtitle}</p>}
+          {subtitle && <p className="text-[10px] text-[#767f8d]">{subtitle}</p>}
         </div>
       )}
     </>

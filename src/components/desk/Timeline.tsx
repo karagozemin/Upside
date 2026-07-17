@@ -1,6 +1,6 @@
 import type { ReplayEvent } from "@/lib/types";
 
-const COLORS = { data: "#22d3ee", risk: "#fb7185", ai: "#a78bfa", action: "#fb923c", result: "#34d399" };
+const COLORS = { data: "#5e9eff", risk: "#f6465d", ai: "#a78bfa", action: "#f0883e", result: "#0ecb81" };
 
 export function Timeline({ events }: { events: ReplayEvent[] }) {
   return (
@@ -11,14 +11,14 @@ export function Timeline({ events }: { events: ReplayEvent[] }) {
           <div className="relative z-10 mt-1 h-6 w-6 shrink-0 rounded-full" style={{ background: COLORS[e.type] }} />
           <div className="panel flex-1 p-4">
             <div className="flex items-center gap-2">
-              <span className="mono text-xs text-[#22d3ee]">{e.time}</span>
+              <span className="mono text-xs text-[#5e9eff]">{e.time}</span>
               <span className="label">{e.type}</span>
             </div>
             <p className="mt-1 font-semibold">{e.title}</p>
-            <p className="mt-1 text-sm text-[#64748b]">{e.description}</p>
+            <p className="mt-1 text-sm text-[#767f8d]">{e.description}</p>
             {e.riskScoreBefore != null && (
               <p className="mono mt-2 text-sm">
-                <span className="text-[#fb7185]">{e.riskScoreBefore}</span> → <span className="text-[#34d399]">{e.riskScoreAfter}</span>
+                <span className="text-[#f6465d]">{e.riskScoreBefore}</span> → <span className="text-[#0ecb81]">{e.riskScoreAfter}</span>
               </p>
             )}
           </div>

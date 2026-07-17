@@ -22,7 +22,7 @@ export default function DeskLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <div className="flex min-h-screen">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-55 flex-col border-r border-white/5 bg-[#030508]/90 backdrop-blur-xl lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-55 flex-col border-r border-white/5 bg-[#0b0e11]/90 backdrop-blur-xl lg:flex">
         <div className="border-b border-white/5 p-5">
           <Logo size={36} subtitle="Risk Desk" href="/" />
         </div>
@@ -36,8 +36,8 @@ export default function DeskLayout({ children }: { children: React.ReactNode }) 
                 href={item.href}
                 className={cn(
                   "flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 transition-all",
-                  active ? "bg-[#22d3ee]/10 text-[#22d3ee]" : "text-[#64748b] hover:bg-white/5 hover:text-[#f1f5f9]",
-                  item.primary && !active && "ring-1 ring-[#fb7185]/20"
+                  active ? "bg-[#5e9eff]/10 text-[#5e9eff]" : "text-[#767f8d] hover:bg-white/5 hover:text-[#eaecef]",
+                  item.primary && !active && "ring-1 ring-[#f6465d]/20"
                 )}
               >
                 <span className="text-base">{item.icon}</span>
@@ -65,11 +65,11 @@ export default function DeskLayout({ children }: { children: React.ReactNode }) 
               Start Demo
             </Link>
             {NAV.map((n) => (
-              <Link key={n.href} href={n.href} className="text-xs text-[#64748b]">{n.label}</Link>
+              <Link key={n.href} href={n.href} className="text-xs text-[#767f8d]">{n.label}</Link>
             ))}
           </div>
-          <p className="hidden text-sm text-[#64748b] lg:block">Demo Portfolio · SoSoValue + SoDEX</p>
-          <Link href="/" className="text-xs text-[#64748b] hover:text-[#f1f5f9]">Home</Link>
+          <p className="hidden text-sm text-[#767f8d] lg:block">Demo Portfolio · SoSoValue + SoDEX</p>
+          <Link href="/" className="text-xs text-[#767f8d] hover:text-[#eaecef]">Home</Link>
         </header>
         <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">{children}</main>
       </div>

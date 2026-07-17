@@ -42,11 +42,11 @@ export function LiveTicker() {
             className="h-1.5 w-1.5 rounded-full"
             style={{
               background:
-                it.tone === "good" ? "#34d399" : it.tone === "accent" ? "#22d3ee" : "#64748b",
+                it.tone === "good" ? "#0ecb81" : it.tone === "accent" ? "#5e9eff" : "#767f8d",
             }}
           />
-          <span className="text-[#64748b]">{it.k}</span>
-          <span className="font-mono font-semibold text-[#f1f5f9]">{it.v}</span>
+          <span className="text-[#767f8d]">{it.k}</span>
+          <span className="font-mono font-semibold text-[#eaecef]">{it.v}</span>
         </span>
       ))}
     </div>
@@ -59,8 +59,8 @@ export function LiveTicker() {
         {row("b")}
         {row("c")}
       </div>
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-linear-to-r from-[#030508] to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-linear-to-l from-[#030508] to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-linear-to-r from-[#0b0e11] to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-linear-to-l from-[#0b0e11] to-transparent" />
     </div>
   );
 }

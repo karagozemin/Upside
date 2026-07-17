@@ -25,10 +25,10 @@ export default function NarrativePage() {
 
   return (
     <div className="mx-auto max-w-3xl animate-rise">
-      <Link href="/desk" className="cursor-pointer text-xs text-[#22d3ee]">← Overview</Link>
+      <Link href="/desk" className="cursor-pointer text-xs text-[#5e9eff]">← Overview</Link>
       <p className="label mt-4">Narrative Radar</p>
       <h1 className="display text-3xl font-bold">Sector Momentum</h1>
-      <p className="mt-2 text-sm text-[#64748b]">Narrative risk connected to position exposure</p>
+      <p className="mt-2 text-sm text-[#767f8d]">Narrative risk connected to position exposure</p>
 
       {loading && operationSteps && (
         <OperationProgress steps={operationSteps} title="Scanning narrative risk" className="mt-8" />
@@ -42,9 +42,9 @@ export default function NarrativePage() {
                 <h3 className="font-bold">{s.name}</h3>
                 <span className={cn("badge", STYLES[s.state])}>{s.stateLabel}</span>
               </div>
-              <p className="mt-3 text-sm text-[#64748b]">{s.connectionCopy}</p>
+              <p className="mt-3 text-sm text-[#767f8d]">{s.connectionCopy}</p>
               {s.affectedPositions.map((pid) => (
-                <Link key={pid} href={`/desk/positions/${pid}`} className="mt-2 block cursor-pointer text-xs text-[#22d3ee]">View position →</Link>
+                <Link key={pid} href={`/desk/positions/${pid}`} className="mt-2 block cursor-pointer text-xs text-[#5e9eff]">View position →</Link>
               ))}
             </div>
           ))}

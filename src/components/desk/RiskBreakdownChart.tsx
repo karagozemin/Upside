@@ -20,13 +20,13 @@ export function RiskBreakdownChart({ breakdown }: { breakdown: RiskBreakdown }) 
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-          <XAxis dataKey="name" tick={{ fill: "#64748b", fontSize: 10 }} axisLine={false} tickLine={false} />
-          <YAxis domain={[0, 100]} tick={{ fill: "#64748b", fontSize: 10 }} axisLine={false} tickLine={false} />
-          <Tooltip contentStyle={{ background: "#111827", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8 }} />
-          <Bar dataKey="score" fill="#22d3ee" radius={[4, 4, 0, 0]} />
+          <XAxis dataKey="name" tick={{ fill: "#767f8d", fontSize: 10 }} axisLine={false} tickLine={false} />
+          <YAxis domain={[0, 100]} tick={{ fill: "#767f8d", fontSize: 10 }} axisLine={false} tickLine={false} />
+          <Tooltip contentStyle={{ background: "#161a20", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8 }} />
+          <Bar dataKey="score" fill="#5e9eff" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
-      <p className="mono mt-3 text-[10px] text-[#475569]">
+      <p className="mono mt-3 text-[10px] text-[#5e6673]">
         Total = L×{RISK_WEIGHTS.liquidity} + V×{RISK_WEIGHTS.volatility} + P×{RISK_WEIGHTS.positionSize} + ...
       </p>
     </div>

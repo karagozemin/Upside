@@ -26,10 +26,10 @@ export default function ReplayPage() {
 
   return (
     <div className="mx-auto max-w-2xl animate-rise">
-      <Link href="/desk/positions/btc-perp" className="cursor-pointer text-xs text-[#22d3ee]">← Back to Demo</Link>
+      <Link href="/desk/positions/btc-perp" className="cursor-pointer text-xs text-[#5e9eff]">← Back to Demo</Link>
       <p className="label mt-4">Risk Replay</p>
       <h1 className="display text-3xl font-bold">62 → 84 → 43</h1>
-      <p className="mt-2 text-sm text-[#64748b]">How BTC risk evolved over time</p>
+      <p className="mt-2 text-sm text-[#767f8d]">How BTC risk evolved over time</p>
 
       {loading && operationSteps && (
         <OperationProgress steps={operationSteps} title="Building risk replay" className="mt-8" />
@@ -40,10 +40,10 @@ export default function ReplayPage() {
           <div className="panel result-reveal mt-8 p-4">
             <ResponsiveContainer width="100%" height={140}>
               <LineChart data={CHART}>
-                <XAxis dataKey="t" tick={{ fill: "#64748b", fontSize: 10 }} axisLine={false} tickLine={false} />
-                <YAxis domain={[0, 100]} tick={{ fill: "#64748b", fontSize: 10 }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{ background: "#111827", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8 }} />
-                <Line type="monotone" dataKey="s" stroke="#22d3ee" strokeWidth={2} dot={{ fill: "#22d3ee", r: 4 }} />
+                <XAxis dataKey="t" tick={{ fill: "#767f8d", fontSize: 10 }} axisLine={false} tickLine={false} />
+                <YAxis domain={[0, 100]} tick={{ fill: "#767f8d", fontSize: 10 }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={{ background: "#161a20", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8 }} />
+                <Line type="monotone" dataKey="s" stroke="#5e9eff" strokeWidth={2} dot={{ fill: "#5e9eff", r: 4 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
