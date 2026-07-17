@@ -60,7 +60,7 @@ Solo on-chain traders have no 24/7 risk desk. When ETF outflows accelerate, orde
 | **3 — Impact Preview** | same | Risk 84→43, liq 4.2%→11.8%, exposure 5x→2.8x |
 | **4 — SoDEX Action** | same | EIP-712 flow + execution proof |
 | **Portfolio Risk** | `/desk` | Portfolio-wide score + at-risk positions + regime |
-| **API Evidence** | [`/diag`](http://localhost:3000/diag) | Live vs simulated per source |
+| **API Evidence** | [`/diag`](http://localhost:3000/diag) | Live vs simulated per source (loading state while pinging live APIs) |
 
 ```bash
 npm install && npm run dev
@@ -118,8 +118,9 @@ Includes a **confusion matrix** and **calibration** breakdown. Deterministic per
 | Component | Status |
 |-----------|--------|
 | SoSoValue news (`/news/hot`) | **Live** when `SOSOVALUE_API_KEY` set |
-| SoSoValue ETF flow (`/etf/.../inflow-chart`) | **Live** when key set (cached; may show demo on 429) |
+| SoSoValue ETF flow (v2 `POST /etf/historicalInflowChart`) | **Live** when key set — real daily net inflow + traded volume |
 | SoSoValue indices (`/indices`) | **Live** when key set |
+| SoSoValue macro events (`/macro/events`) | **Live** when key set |
 | SoDEX orderbook (`/markets/.../orderbook`) | **Live** — public endpoint |
 | SoDEX wallet positions | **Live** when `SODEX_USER_ADDRESS` set |
 | BTC-PERP desk position | **Live-priced** — wallet positions or orderbook showcase when wallet empty |
@@ -137,14 +138,14 @@ Full evidence panel: **`/diag`** and **API Evidence** on the position page.
 
 | Endpoint | Risk use |
 |----------|----------|
-| `GET /news/hot` | Crypto news sentiment → news risk factor |
-| `GET /etf/{ticker}/inflow-chart` | BTC ETF institutional flow → ETF risk factor |
-| `GET /indices` | Sector momentum → narrative radar |
-| `GET /macro/events` | Macro event window → macro risk factor |
+| `GET v1/news/hot` | Crypto news sentiment → news risk factor |
+| `POST v2/etf/historicalInflowChart` | BTC ETF institutional flow (real daily net inflow + traded volume) → ETF risk factor |
+| `GET v1/indices` | Sector momentum → narrative radar |
+| `GET v1/macro/events` | Macro event window → macro risk factor |
 
-- Base: `https://openapi.sosovalue.com/openapi/v1`
+- Base: `https://openapi.sosovalue.com/openapi/{v1,v2}`
 - Auth: `x-soso-api-key`
-- 5min cache, sequential request queue, graceful 429 fallback with stale live cache
+- Resilience chain: 5-min cache → sequential request queue → **automatic 429 retry with backoff** → stale live cache → deterministic demo data (UI never breaks)
 
 ---
 
@@ -312,6 +313,7 @@ API Evidence:  https://your-app.vercel.app/diag
 - **Auto-intervention**: user-approved reduce-only EIP-712 order, risk 90 → 62 → resolves
 - **Deterministic backtest** (`/desk/backtest`): hit-rate 76.7%, precision, false-alarm rate, avoided drawdown, confusion matrix, calibration
 - **Portfolio-wide risk** (`/desk`, `/api/portfolio`): market regime + at-risk detection
+- **All 10 data sources live** on `/diag` — SoSoValue v2 ETF endpoint, 429 retry/backoff, empty "simulated" list
 - Every evidence path reproducible from a single seed
 
 ---

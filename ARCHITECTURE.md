@@ -143,16 +143,18 @@ Everything judge-facing is reproducible:
 | Order execution | **real EIP-712 testnet execution** when keys set — matching-engine order IDs (verified, e.g. `orderID 2338792272`); honest "judge-safe simulated" label otherwise — **never fake order IDs** |
 | Audit log | every decision hashed and appended (`audit-log.ts`) |
 
-`/diag` and `/api/diag` report, per data source, whether the running instance is on **live** data or **fallback** — so a reviewer never has to guess what's real.
+`/diag` and `/api/diag` report, per data source, whether the running instance is on **live** data or **fallback** — so a reviewer never has to guess what's real. The page shows a spinner while the server pings every external endpoint in real time; with keys configured all 10 sources report **live** and the "simulated" column is empty.
+
+**Fallback safety net:** every external call is wrapped so a failure can never break the UI — SoSoValue → deterministic demo intel, SoDEX orderbook/positions → demo book/positions, account state → showcase position, Groq → deterministic template memo. If all live sources go down simultaneously the product keeps working end-to-end on honest, clearly-labelled fallback data.
 
 ---
 
 ## 6. External integrations
 
 ### SoSoValue (`sosovalue.ts`)
-- Base `https://openapi.sosovalue.com/openapi/v1`, auth via `x-soso-api-key`.
-- Endpoints: `/news/hot`, `/etf/{ticker}/inflow-chart`, `/indices`, `/macro/events`.
-- **Resilience:** 5-minute in-memory cache → sequential request queue (avoids burst 429s) → on 429, serve stale live cache → only then deterministic demo data. Each response is tagged with its provenance for `/diag`.
+- Base `https://openapi.sosovalue.com/openapi/{v1,v2}`, auth via `x-soso-api-key`.
+- Endpoints: `v1 GET /news/hot`, `v2 POST /etf/historicalInflowChart` (real daily net inflow + traded volume for US BTC spot ETFs), `v1 GET /indices`, `v1 GET /macro/events`.
+- **Resilience:** 5-minute in-memory cache → sequential request queue (avoids burst 429s) → **automatic retry with backoff on 429** → serve stale live cache → only then deterministic demo data. Each response is tagged with its provenance for `/diag`.
 
 ### SoDEX (`sodex.ts`, `sodex-signer.ts`)
 - Testnet gateway `https://testnet-gw.sodex.dev/api/v1/perps`.
