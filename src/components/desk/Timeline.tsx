@@ -7,7 +7,7 @@ export function Timeline({ events }: { events: ReplayEvent[] }) {
     <div className="space-y-0">
       {events.map((e, i) => (
         <div key={e.id} className="relative flex gap-4 pb-6">
-          {i < events.length - 1 && <div className="absolute left-[11px] top-8 h-full w-px bg-white/10" />}
+          {i < events.length - 1 && <div className="absolute left-2.75 top-8 h-full w-px bg-white/10" />}
           <div className="relative z-10 mt-1 h-6 w-6 shrink-0 rounded-full" style={{ background: COLORS[e.type] }} />
           <div className="panel flex-1 p-4">
             <div className="flex items-center gap-2">

@@ -35,7 +35,7 @@ export function PositionsTable({ positions }: { positions: Position[] }) {
         <div className="divide-y divide-white/5">
           {positions.map((pos) => (
             <Link key={pos.id} href={`/desk/positions/${pos.id}`}
-              className="flex cursor-pointer items-center justify-between px-5 py-4 transition hover:bg-white/[0.03]">
+              className="flex cursor-pointer items-center justify-between px-5 py-4 transition hover:bg-white/3">
               <div>
                 <span className="font-medium">{pos.asset}</span>
                 <span className="ml-2 text-xs capitalize text-[#767f8d]">{pos.side}</span>

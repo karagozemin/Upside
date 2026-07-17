@@ -16,7 +16,7 @@ export function ExecutionProof({ result }: { result: ExecutionResult }) {
           ["Audit hash", result.auditHash ?? "—"],
           ["Risk delta", `${result.riskScoreBefore} → ${result.riskScoreAfter}`],
         ].map(([k, v]) => (
-          <div key={k} className="flex justify-between gap-2 rounded-lg bg-white/[0.03] px-3 py-2">
+          <div key={k} className="flex justify-between gap-2 rounded-lg bg-white/3 px-3 py-2">
             <span className="text-[#767f8d]">{k}</span>
             <span className={cn("mono font-medium", k === "Mode" && !isTestnet && "text-[#f0b90b]")}>{v}</span>
           </div>

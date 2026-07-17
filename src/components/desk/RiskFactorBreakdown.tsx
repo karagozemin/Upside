@@ -15,13 +15,13 @@ export function RiskFactorBreakdown({ position }: { position: PositionDetail }) 
       </div>
       <div className="space-y-3 p-6">
         {factors.map((f) => (
-          <div key={f.id} className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
+          <div key={f.id} className="rounded-xl border border-white/5 bg-white/2 p-4">
             <div className="flex items-center justify-between gap-3">
               <p className="text-sm font-semibold">{f.label}</p>
               <p className="mono text-xs text-[#767f8d]">{(f.weight * 100).toFixed(0)}% weight · +{f.contribution} pts</p>
             </div>
             <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/5">
-              <div className="h-full rounded-full bg-gradient-to-r from-[#f6465d] to-[#f0883e]" style={{ width: `${f.score}%` }} />
+              <div className="h-full rounded-full bg-linear-to-r from-[#f6465d] to-[#f0883e]" style={{ width: `${f.score}%` }} />
             </div>
             <p className="mt-2 text-xs leading-relaxed text-[#848e9c]">{f.why}</p>
           </div>

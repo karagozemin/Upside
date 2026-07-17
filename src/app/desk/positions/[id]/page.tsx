@@ -117,7 +117,7 @@ export default function PositionPage({ params }: { params: Promise<{ id: string 
 
       <div className="mt-4 grid grid-cols-4 gap-2">
         {[["Price", formatPrice(position.currentPrice)], ["Lev", `${position.leverage}x`], ["Liq", `${position.liquidationDistance}%`], ["Risk", `${position.riskScore}`]].map(([l,v]) => (
-          <div key={l} className="rounded-xl border border-white/5 bg-white/[0.03] px-3 py-2 text-center">
+          <div key={l} className="rounded-xl border border-white/5 bg-white/3 px-3 py-2 text-center">
             <p className="text-[10px] text-[#767f8d]">{l}</p>
             <p className="mono text-sm font-bold">{v}</p>
           </div>
@@ -127,7 +127,7 @@ export default function PositionPage({ params }: { params: Promise<{ id: string 
       <div className="mt-8 flex gap-2 overflow-x-auto pb-2">
         {STEPS.map((s) => (
           <button key={s.id} type="button" onClick={() => document.getElementById(s.id)?.scrollIntoView({ behavior: "smooth" })}
-            className="shrink-0 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-left hover:border-[#5e9eff]/30">
+            className="shrink-0 rounded-xl border border-white/10 bg-white/3 px-4 py-2 text-left hover:border-[#5e9eff]/30">
             <p className="mono text-[10px] text-[#5e9eff]">Step {s.n}</p>
             <p className="text-xs font-semibold">{s.title}</p>
           </button>

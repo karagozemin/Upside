@@ -18,7 +18,7 @@ export function SafetyControls() {
       </p>
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         {CONTROLS.map((c) => (
-          <div key={c.rule} className="rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2">
+          <div key={c.rule} className="rounded-lg border border-white/5 bg-white/2 px-3 py-2">
             <p className="text-xs font-semibold">{c.rule}</p>
             <p className="mt-0.5 text-[10px] text-[#767f8d]">{c.detail}</p>
           </div>
